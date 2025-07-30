@@ -1,13 +1,25 @@
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { CareerCard } from "@/components/CareerCard";
+import { CareerModal } from "@/components/CareerModal";
 import { careerJourneys } from "@/data/careerJourneys";
+import { CareerJourney } from "@/types/career";
 import { GraduationCap } from "lucide-react";
 
 const Index = () => {
-  const navigate = useNavigate();
+  const [selectedCareer, setSelectedCareer] = useState<CareerJourney | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleCardClick = (id: string) => {
-    navigate(`/career/${id}`);
+    const career = careerJourneys.find((journey) => journey.id === id);
+    if (career) {
+      setSelectedCareer(career);
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedCareer(null);
   };
 
   return (
@@ -33,6 +45,12 @@ const Index = () => {
           ))}
         </div>
       </div>
+
+      <CareerModal
+        career={selectedCareer}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 };

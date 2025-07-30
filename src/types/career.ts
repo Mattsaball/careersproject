@@ -1,8 +1,13 @@
 export interface CareerJourney {
   id: string;
-  title: string;
-  subtitle: string;
-  details: string;
-  skills: string[];
-  advice: string;
+  company: string;
+  industry: string;
+  graduationYear: string;
+  major: string;
+  postGradPlans: string;
+  careerPath: string;
+  freshmanAdvice: string;
+  skillsToFocus: string;
+  shortcuts: string;
+  additionalAdvice: string;
 }
