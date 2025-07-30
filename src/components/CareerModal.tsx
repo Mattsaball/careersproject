@@ -21,13 +21,22 @@ export const CareerModal = ({ career, isOpen, onClose }: CareerModalProps) => {
           <DialogTitle className="text-2xl">
             {career.postGradPlans}
           </DialogTitle>
-          <Badge variant="secondary" className="w-fit">
-            {career.major}
-          </Badge>
         </DialogHeader>
         
-        <ScrollArea className="max-h-[calc(90vh-120px)] pr-4">
+        <ScrollArea className="max-h-[calc(90vh-120px)] pr-4 [&>[data-radix-scroll-area-scrollbar]]:opacity-100">
           <div className="space-y-6">
+            {career.major && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Major</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                    {career.major}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
             {career.careerPath && (
               <Card>
                 <CardHeader>

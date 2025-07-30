@@ -19,9 +19,6 @@ export const CareerCard = ({ career, onClick }: CareerCardProps) => {
             <h3 className="text-lg font-semibold text-card-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
               {career.postGradPlans}
             </h3>
-            <p className="text-sm font-medium text-muted-foreground bg-accent/50 px-3 py-1 rounded-full inline-block">
-              {career.major}
-            </p>
           </div>
           <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-200 flex-shrink-0 ml-4" />
         </div>
