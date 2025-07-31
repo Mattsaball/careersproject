@@ -19,15 +19,15 @@ const Index = () => {
     }
 
     return careerJourneys.filter((career) => {
-      const majorMatch = selectedMajors.length === 0 || selectedMajors.some(selectedMajor => 
+      const majorMatch = selectedMajors.length > 0 && selectedMajors.some(selectedMajor => 
         career.majorFilter.split('||').map(f => f.trim()).includes(selectedMajor)
       );
       
-      const careerMatch = selectedCareerTypes.length === 0 || selectedCareerTypes.some(selectedCareer => 
+      const careerMatch = selectedCareerTypes.length > 0 && selectedCareerTypes.some(selectedCareer => 
         career.careerFilter.split('||').map(f => f.trim()).includes(selectedCareer)
       );
       
-      return majorMatch && careerMatch;
+      return majorMatch || careerMatch;
     });
   }, [selectedMajors, selectedCareerTypes]);
 
