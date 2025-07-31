@@ -9,4 +9,6 @@ export interface CareerJourney {
   networkingStrategies: string;
   additionalAdvice: string;
   year: string;
+  majorFilter: string;
+  careerFilter: string;
 }

@@ -14,5 +14,7 @@ export const careerJourneys: CareerJourney[] = reflectsData
     shortcuts: entry["Hacks and shortcuts"] || "",
     networkingStrategies: entry["Networking strategies"] || "",
     additionalAdvice: entry["Additional advice"] || "",
-    year: entry["Year"] || ""
+    year: entry["Year"] || "",
+    majorFilter: entry["Major Filter"] || "",
+    careerFilter: entry["Career Filter"] || ""
   }));
