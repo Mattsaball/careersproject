@@ -15,7 +15,7 @@ const Index = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:8081/api/journeys")
+    fetch("http://localhost:8080/api/journeys")
       .then((res) => res.json())
       .then((data) => {
         const backendJourneys = data.map((journey: any, index: number) => ({

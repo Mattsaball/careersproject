@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 
-const ContributeForm: React.FC = () => {
+interface ContributeFormProps {
+  onSubmitSuccess: (newJourney: any) => void;
+}
+
+const ContributeForm: React.FC<ContributeFormProps> = ({ onSubmitSuccess }) => {
   const [anonymous, setAnonymous] = useState(true);
   const [name, setName] = useState("");
   const [linkedin, setLinkedin] = useState("");
@@ -28,15 +32,28 @@ const ContributeForm: React.FC = () => {
 
     try {
       console.log("Submitting payload:", payload);
-      const res = await fetch("http://localhost:8081/api/journeys", {
+
+      const res = await fetch("http://localhost:8080/api/journeys", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (res.ok) {
+        const savedJourney = await res.json();
+        onSubmitSuccess(savedJourney); // ✅ Push to journey list
         alert("Submission successful!");
-        // Optionally: clear form or redirect
+
+        // Reset form
+        setName("");
+        setLinkedin("");
+        setGradYear("");
+        setSummerExperiences([]);
+        setClubs("");
+        setResources("");
+        setMissed("");
+        setAdvice("");
+        setAnonymous(true);
       } else {
         alert("Submission failed. Try again.");
       }
@@ -64,7 +81,6 @@ const ContributeForm: React.FC = () => {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth();
-
     const effectiveYear = currentMonth < 5 ? currentYear - 1 : currentYear;
 
     const startYear = 2000;
