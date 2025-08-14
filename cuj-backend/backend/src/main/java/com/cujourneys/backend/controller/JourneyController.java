@@ -1,6 +1,6 @@
 package com.cujourneys.backend.controller;
 
-import com.cujourneys.backend.model.Journey;
+import com.cujourneys.backend.model.Journey;    
 import com.cujourneys.backend.repository.JourneyRepository;
 import org.springframework.web.bind.annotation.*;
 
