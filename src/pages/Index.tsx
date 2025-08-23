@@ -70,9 +70,19 @@ const Index = () => {
     if (selectedMajors.length === 0) return true;
     if (!journey.majorFilter) return false;
     const majorCategories = journey.majorFilter.split(' || ').map(cat => cat.trim());
-    return selectedMajors.some(selectedMajor => 
-      majorCategories.includes(selectedMajor)
-    );
+    
+    return selectedMajors.some(selectedMajor => {
+      // Direct match first
+      if (majorCategories.includes(selectedMajor)) return true;
+      
+      // Handle formatting differences between our filters and the data
+      const normalizedCategories = majorCategories.map(cat => cat.replace(/[&/]/g, ' & '));
+      const normalizedSelected = selectedMajor.replace(/[&/]/g, ' & ');
+      
+      return normalizedCategories.some(cat => 
+        cat.includes(normalizedSelected) || normalizedSelected.includes(cat)
+      );
+    });
   };
 
   // Helper function to check if a journey matches career filter
@@ -80,13 +90,25 @@ const Index = () => {
     if (selectedCareerTypes.length === 0) return true;
     if (!journey.careerFilter) return false;
     const careerCategories = journey.careerFilter.split(' || ').map(cat => cat.trim());
-    return selectedCareerTypes.some(selectedCareer => 
-      careerCategories.includes(selectedCareer)
-    );
+    
+    return selectedCareerTypes.some(selectedCareer => {
+      // Direct match first
+      if (careerCategories.includes(selectedCareer)) return true;
+      
+      // Handle formatting differences between our filters and the data
+      const normalizedCategories = careerCategories.map(cat => cat.replace(/[/]/g, ' / '));
+      const normalizedSelected = selectedCareer.replace(/[/]/g, ' / ');
+      
+      return normalizedCategories.some(cat => 
+        cat.includes(normalizedSelected) || normalizedSelected.includes(cat)
+      );
+    });
   };
 
   // Filter journeys whenever filters change
   useEffect(() => {
+    console.log('Filter state changed:', { selectedMajors, selectedCareerTypes, allJourneys: allJourneys.length });
+    
     if (selectedMajors.length === 0 && selectedCareerTypes.length === 0) {
       setFilteredJourneys(allJourneys);
     } else {
@@ -95,8 +117,22 @@ const Index = () => {
         const careerMatch = matchesCareerFilter(journey, selectedCareerTypes);
         
         // OR logic: show if matches any selected filter
-        return majorMatch || careerMatch;
+        const shouldShow = majorMatch || careerMatch;
+        
+        if (shouldShow) {
+          console.log('Journey matched:', {
+            id: journey.id,
+            majorFilter: journey.majorFilter,
+            careerFilter: journey.careerFilter,
+            majorMatch,
+            careerMatch
+          });
+        }
+        
+        return shouldShow;
       });
+      
+      console.log('Filtered results:', filtered.length);
       setFilteredJourneys(filtered);
     }
   }, [allJourneys, selectedMajors, selectedCareerTypes]);
