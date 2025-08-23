@@ -150,7 +150,7 @@ const Index = () => {
     setSelectedYears([]);
   };
 
-  // Filtered journeys using OR logic
+  // Filtered journeys using OR logic between major and career type
   const filteredJourneys = useMemo(() => {
     if (selectedMajors.length === 0 && selectedCareerTypes.length === 0 && selectedYears.length === 0) {
       return allJourneys;
@@ -161,7 +161,10 @@ const Index = () => {
       const careerMatch = selectedCareerTypes.length === 0 || selectedCareerTypes.includes(getCareerTypeCategory(journey.industry || ''));
       const yearMatch = selectedYears.length === 0 || selectedYears.includes(journey.graduationYear || '');
 
-      return majorMatch && careerMatch && yearMatch;
+      // OR logic between major and career type, AND with year
+      const majorOrCareerMatch = (selectedMajors.length === 0 && selectedCareerTypes.length === 0) || majorMatch || careerMatch;
+      
+      return majorOrCareerMatch && yearMatch;
     });
   }, [allJourneys, selectedMajors, selectedCareerTypes, selectedYears]);
 
