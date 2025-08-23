@@ -68,6 +68,7 @@ const Index = () => {
   // Helper function to check if a journey matches major filter
   const matchesMajorFilter = (journey: CareerJourney, selectedMajors: string[]) => {
     if (selectedMajors.length === 0) return true;
+    if (!journey.majorFilter) return false;
     const majorCategories = journey.majorFilter.split(' || ').map(cat => cat.trim());
     return selectedMajors.some(selectedMajor => 
       majorCategories.includes(selectedMajor)
@@ -77,6 +78,7 @@ const Index = () => {
   // Helper function to check if a journey matches career filter
   const matchesCareerFilter = (journey: CareerJourney, selectedCareerTypes: string[]) => {
     if (selectedCareerTypes.length === 0) return true;
+    if (!journey.careerFilter) return false;
     const careerCategories = journey.careerFilter.split(' || ').map(cat => cat.trim());
     return selectedCareerTypes.some(selectedCareer => 
       careerCategories.includes(selectedCareer)
