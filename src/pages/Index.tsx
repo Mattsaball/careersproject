@@ -45,8 +45,8 @@ const Index = () => {
       return true;
     }
 
-    let matchesMajor = selectedMajors.length === 0;
-    let matchesCareer = selectedCareerTypes.length === 0;
+    let matchesMajor = false;
+    let matchesCareer = false;
 
     // Check major filter - exact category matching using Major Filter field
     if (selectedMajors.length > 0) {
@@ -102,7 +102,8 @@ const Index = () => {
       });
     }
 
-    return matchesMajor && matchesCareer;
+    // Use OR logic - show if matches either major OR career filter
+    return matchesMajor || matchesCareer;
   });
 
   useEffect(() => {
