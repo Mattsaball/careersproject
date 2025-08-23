@@ -48,22 +48,62 @@ const Index = () => {
     let matchesMajor = selectedMajors.length === 0;
     let matchesCareer = selectedCareerTypes.length === 0;
 
-    // Check major filter
+    // Check major filter - exact category matching
     if (selectedMajors.length > 0) {
-      matchesMajor = selectedMajors.some(selectedMajor => 
-        journey.major?.toLowerCase().includes(selectedMajor.toLowerCase()) ||
-        journey.major?.toLowerCase().includes(selectedMajor.replace(' & ', '/').toLowerCase()) ||
-        journey.major?.toLowerCase().includes(selectedMajor.replace('/', ' & ').toLowerCase())
-      );
+      matchesMajor = selectedMajors.some(selectedMajor => {
+        const journeyMajor = journey.major?.toLowerCase() || '';
+        
+        // Map filter categories to data patterns
+        switch(selectedMajor) {
+          case "Business & Finance":
+            return journeyMajor.includes('business') || journeyMajor.includes('finance') || journeyMajor.includes('economics');
+          case "Science & Health Sciences":
+            return journeyMajor.includes('biology') || journeyMajor.includes('chemistry') || journeyMajor.includes('physics') || 
+                   journeyMajor.includes('science') || journeyMajor.includes('health') || journeyMajor.includes('medical');
+          case "Engineering & Math":
+            return journeyMajor.includes('engineering') || journeyMajor.includes('math') || journeyMajor.includes('computer');
+          case "Humanities":
+            return journeyMajor.includes('english') || journeyMajor.includes('history') || journeyMajor.includes('philosophy') ||
+                   journeyMajor.includes('literature') || journeyMajor.includes('humanities');
+          case "Social Sciences":
+            return journeyMajor.includes('psychology') || journeyMajor.includes('sociology') || journeyMajor.includes('political') ||
+                   journeyMajor.includes('anthropology') || journeyMajor.includes('social');
+          case "Arts & Media":
+            return journeyMajor.includes('art') || journeyMajor.includes('media') || journeyMajor.includes('design') ||
+                   journeyMajor.includes('music') || journeyMajor.includes('theater') || journeyMajor.includes('film');
+          default:
+            return false;
+        }
+      });
     }
 
-    // Check career filter  
+    // Check career filter - exact category matching
     if (selectedCareerTypes.length > 0) {
-      matchesCareer = selectedCareerTypes.some(selectedCareer =>
-        journey.industry?.toLowerCase().includes(selectedCareer.toLowerCase()) ||
-        journey.industry?.toLowerCase().includes(selectedCareer.replace(' / ', '/').toLowerCase()) ||
-        journey.industry?.toLowerCase().includes(selectedCareer.replace('/', ' / ').toLowerCase())
-      );
+      matchesCareer = selectedCareerTypes.some(selectedCareer => {
+        const journeyCareer = journey.industry?.toLowerCase() || '';
+        
+        // Map filter categories to data patterns
+        switch(selectedCareer) {
+          case "Business / Finance":
+            return journeyCareer.includes('business') || journeyCareer.includes('finance') || journeyCareer.includes('consulting');
+          case "Engineering / Tech":
+            return journeyCareer.includes('tech') || journeyCareer.includes('engineering') || journeyCareer.includes('software');
+          case "Healthcare / Life Sciences":
+            return journeyCareer.includes('health') || journeyCareer.includes('medical') || journeyCareer.includes('life sciences');
+          case "Academia / Graduate School":
+            return journeyCareer.includes('academia') || journeyCareer.includes('graduate') || journeyCareer.includes('research');
+          case "Government / Policy / Legal":
+            return journeyCareer.includes('government') || journeyCareer.includes('policy') || journeyCareer.includes('legal') || journeyCareer.includes('law');
+          case "Media / Arts / Museums":
+            return journeyCareer.includes('media') || journeyCareer.includes('arts') || journeyCareer.includes('museum');
+          case "Education / Teaching":
+            return journeyCareer.includes('education') || journeyCareer.includes('teaching') || journeyCareer.includes('school');
+          case "Sustainability / Environment":
+            return journeyCareer.includes('sustainability') || journeyCareer.includes('environment') || journeyCareer.includes('green');
+          default:
+            return false;
+        }
+      });
     }
 
     return matchesMajor && matchesCareer;
