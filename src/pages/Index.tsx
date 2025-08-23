@@ -150,6 +150,27 @@ const Index = () => {
     setSelectedYears([]);
   };
 
+  // Helper function to check if major filter matches
+  const majorFilterMatches = (journey: CareerJourney, selectedMajors: string[]): boolean => {
+    if (selectedMajors.length === 0) return true;
+    
+    const majorFilter = journey.majorFilter || '';
+    // Split by || to handle multiple categories
+    const majorCategories = majorFilter.split('||').map(cat => cat.trim());
+    
+    return selectedMajors.some(selectedMajor => 
+      majorCategories.includes(selectedMajor)
+    );
+  };
+
+  // Helper function to check if career filter matches
+  const careerFilterMatches = (journey: CareerJourney, selectedCareerTypes: string[]): boolean => {
+    if (selectedCareerTypes.length === 0) return true;
+    
+    const careerFilter = journey.careerFilter || '';
+    return selectedCareerTypes.includes(careerFilter);
+  };
+
   // Filtered journeys using OR logic
   const filteredJourneys = useMemo(() => {
     if (selectedMajors.length === 0 && selectedCareerTypes.length === 0 && selectedYears.length === 0) {
@@ -157,8 +178,8 @@ const Index = () => {
     }
 
     return allJourneys.filter(journey => {
-      const majorMatch = selectedMajors.length === 0 || selectedMajors.includes(getMajorCategory(journey.major || ''));
-      const careerMatch = selectedCareerTypes.length === 0 || selectedCareerTypes.includes(getCareerTypeCategory(journey.industry || ''));
+      const majorMatch = majorFilterMatches(journey, selectedMajors);
+      const careerMatch = careerFilterMatches(journey, selectedCareerTypes);
       const yearMatch = selectedYears.length === 0 || selectedYears.includes(journey.graduationYear || '');
 
       return majorMatch && careerMatch && yearMatch;
