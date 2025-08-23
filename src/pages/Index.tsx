@@ -155,11 +155,14 @@ const Index = () => {
     if (selectedMajors.length === 0) return true;
     
     const majorFilter = journey.majorFilter || '';
-    // Split by || to handle multiple categories
+    // Split by || to handle multiple categories and clean up whitespace
     const majorCategories = majorFilter.split('||').map(cat => cat.trim());
     
+    // Check if any selected major matches any of the journey's major categories
     return selectedMajors.some(selectedMajor => 
-      majorCategories.includes(selectedMajor)
+      majorCategories.some(journeyCategory => 
+        journeyCategory === selectedMajor
+      )
     );
   };
 
@@ -168,7 +171,15 @@ const Index = () => {
     if (selectedCareerTypes.length === 0) return true;
     
     const careerFilter = journey.careerFilter || '';
-    return selectedCareerTypes.includes(careerFilter);
+    // Split by || to handle multiple categories and clean up whitespace
+    const careerCategories = careerFilter.split('||').map(cat => cat.trim());
+    
+    // Check if any selected career type matches any of the journey's career categories
+    return selectedCareerTypes.some(selectedCareer => 
+      careerCategories.some(journeyCategory => 
+        journeyCategory === selectedCareer
+      )
+    );
   };
 
   // Filtered journeys using OR logic
