@@ -2,12 +2,16 @@ import { useState, useEffect } from "react";
 import { CareerCard } from "@/components/CareerCard";
 import { CareerModal } from "@/components/CareerModal";
 import { UserJourneyModal } from "@/components/UserJourneyModal";
+import { FilterSection } from "@/components/FilterSection";
 import { careerJourneys as staticJourneys } from "@/data/careerJourneys";
 import { CareerJourney } from "@/types/career";
 import { GraduationCap } from "lucide-react";
 
 const Index = () => {
   const [allJourneys, setAllJourneys] = useState<CareerJourney[]>([]);
+  const [filteredJourneys, setFilteredJourneys] = useState<CareerJourney[]>([]);
+  const [selectedMajors, setSelectedMajors] = useState<string[]>([]);
+  const [selectedCareerTypes, setSelectedCareerTypes] = useState<string[]>([]);
   const [selectedStaticCareer, setSelectedStaticCareer] =
     useState<CareerJourney | null>(null);
   const [selectedUserJourney, setSelectedUserJourney] =
@@ -20,8 +24,18 @@ const Index = () => {
       .then((data) => {
         const backendJourneys = data.map((journey: any, index: number) => ({
           id: `backend-${journey.id || index}`,
-          postGradPlans: journey.advice || "No post-grad plans shared yet",
+          company: "",
+          industry: "",
+          majorFilter: "",
+          careerFilter: "",
           graduationYear: journey.graduationYear || "N/A",
+          major: "",
+          postGradPlans: journey.advice || "No post-grad plans shared yet",
+          careerPath: "",
+          freshmanAdvice: "",
+          skillsToFocus: "",
+          shortcuts: "",
+          additionalAdvice: "",
           name: journey.anonymous ? "Anonymous" : journey.name || "Unnamed",
           linkedin: journey.anonymous ? "" : journey.linkedin || "",
           summers: journey.summers || [],
@@ -38,6 +52,7 @@ const Index = () => {
         }));
 
         setAllJourneys([...staticNormalized, ...backendJourneys]);
+        setFilteredJourneys([...staticNormalized, ...backendJourneys]);
       })
       .catch((err) => {
         console.error("Failed to fetch backend journeys:", err);
@@ -46,11 +61,67 @@ const Index = () => {
           id: `static-${journey.id}`,
         }));
         setAllJourneys(staticNormalized);
+        setFilteredJourneys(staticNormalized);
       });
   }, []);
 
+  // Helper function to check if a journey matches major filter
+  const matchesMajorFilter = (journey: CareerJourney, selectedMajors: string[]) => {
+    if (selectedMajors.length === 0) return true;
+    const majorCategories = journey.majorFilter.split(' || ').map(cat => cat.trim());
+    return selectedMajors.some(selectedMajor => 
+      majorCategories.includes(selectedMajor)
+    );
+  };
+
+  // Helper function to check if a journey matches career filter
+  const matchesCareerFilter = (journey: CareerJourney, selectedCareerTypes: string[]) => {
+    if (selectedCareerTypes.length === 0) return true;
+    const careerCategories = journey.careerFilter.split(' || ').map(cat => cat.trim());
+    return selectedCareerTypes.some(selectedCareer => 
+      careerCategories.includes(selectedCareer)
+    );
+  };
+
+  // Filter journeys whenever filters change
+  useEffect(() => {
+    if (selectedMajors.length === 0 && selectedCareerTypes.length === 0) {
+      setFilteredJourneys(allJourneys);
+    } else {
+      const filtered = allJourneys.filter(journey => {
+        const majorMatch = matchesMajorFilter(journey, selectedMajors);
+        const careerMatch = matchesCareerFilter(journey, selectedCareerTypes);
+        
+        // OR logic: show if matches any selected filter
+        return majorMatch || careerMatch;
+      });
+      setFilteredJourneys(filtered);
+    }
+  }, [allJourneys, selectedMajors, selectedCareerTypes]);
+
+  const handleMajorToggle = (major: string) => {
+    setSelectedMajors(prev => 
+      prev.includes(major) 
+        ? prev.filter(m => m !== major)
+        : [...prev, major]
+    );
+  };
+
+  const handleCareerTypeToggle = (careerType: string) => {
+    setSelectedCareerTypes(prev => 
+      prev.includes(careerType) 
+        ? prev.filter(c => c !== careerType)
+        : [...prev, careerType]
+    );
+  };
+
+  const handleClearAllFilters = () => {
+    setSelectedMajors([]);
+    setSelectedCareerTypes([]);
+  };
+
   const handleCardClick = (id: string) => {
-    const journey = allJourneys.find((j) => j.id === id);
+    const journey = filteredJourneys.find((j) => j.id === id);
     if (!journey) return;
 
     if (id.startsWith("static-")) {
@@ -83,8 +154,16 @@ const Index = () => {
           </p>
         </div>
 
+        <FilterSection
+          selectedMajors={selectedMajors}
+          selectedCareerTypes={selectedCareerTypes}
+          onMajorToggle={handleMajorToggle}
+          onCareerTypeToggle={handleCareerTypeToggle}
+          onClearAll={handleClearAllFilters}
+        />
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-          {allJourneys.map((career) => (
+          {filteredJourneys.map((career) => (
             <CareerCard
               key={career.id}
               career={career}
