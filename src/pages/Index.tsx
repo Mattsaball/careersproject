@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { CareerCard } from "@/components/CareerCard";
 import { CareerModal } from "@/components/CareerModal";
 import { UserJourneyModal } from "@/components/UserJourneyModal";
+import { FilterSection } from "@/components/FilterSection";
 import { careerJourneys as staticJourneys } from "@/data/careerJourneys";
 import { CareerJourney } from "@/types/career";
 import { GraduationCap } from "lucide-react";
@@ -13,6 +14,11 @@ const Index = () => {
   const [selectedUserJourney, setSelectedUserJourney] =
     useState<CareerJourney | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Filter states
+  const [selectedMajors, setSelectedMajors] = useState<string[]>([]);
+  const [selectedCareerTypes, setSelectedCareerTypes] = useState<string[]>([]);
+  const [selectedYears, setSelectedYears] = useState<string[]>([]);
 
   useEffect(() => {
     fetch("http://localhost:8080/api/journeys")
@@ -67,6 +73,98 @@ const Index = () => {
     setIsModalOpen(false);
   };
 
+  // Major category mapping
+  const getMajorCategory = (major: string): string => {
+    const majorLower = major.toLowerCase();
+    if (majorLower.includes('business') || majorLower.includes('finance') || majorLower.includes('economics') || majorLower.includes('accounting')) {
+      return 'Business & Finance';
+    }
+    if (majorLower.includes('biology') || majorLower.includes('chemistry') || majorLower.includes('physics') || majorLower.includes('medicine') || majorLower.includes('health') || majorLower.includes('science')) {
+      return 'Science & Health Sciences';
+    }
+    if (majorLower.includes('engineering') || majorLower.includes('computer') || majorLower.includes('math') || majorLower.includes('technology')) {
+      return 'Engineering & Math';
+    }
+    if (majorLower.includes('history') || majorLower.includes('literature') || majorLower.includes('philosophy') || majorLower.includes('language') || majorLower.includes('humanities')) {
+      return 'Humanities';
+    }
+    if (majorLower.includes('psychology') || majorLower.includes('sociology') || majorLower.includes('anthropology') || majorLower.includes('political') || majorLower.includes('social')) {
+      return 'Social Sciences';
+    }
+    if (majorLower.includes('art') || majorLower.includes('music') || majorLower.includes('theater') || majorLower.includes('media') || majorLower.includes('design')) {
+      return 'Arts & Media';
+    }
+    return 'Other';
+  };
+
+  // Career type mapping
+  const getCareerTypeCategory = (careerType: string): string => {
+    const careerLower = careerType.toLowerCase();
+    if (careerLower.includes('business') || careerLower.includes('finance') || careerLower.includes('banking') || careerLower.includes('consulting')) {
+      return 'Business / Finance';
+    }
+    if (careerLower.includes('engineering') || careerLower.includes('tech') || careerLower.includes('software') || careerLower.includes('computer')) {
+      return 'Engineering / Tech';
+    }
+    if (careerLower.includes('healthcare') || careerLower.includes('medical') || careerLower.includes('life sciences') || careerLower.includes('biology')) {
+      return 'Healthcare / Life Sciences';
+    }
+    if (careerLower.includes('academia') || careerLower.includes('graduate') || careerLower.includes('research') || careerLower.includes('phd')) {
+      return 'Academia / Graduate School';
+    }
+    if (careerLower.includes('government') || careerLower.includes('policy') || careerLower.includes('legal') || careerLower.includes('law')) {
+      return 'Government / Policy / Legal';
+    }
+    if (careerLower.includes('media') || careerLower.includes('arts') || careerLower.includes('museum') || careerLower.includes('creative')) {
+      return 'Media / Arts / Museums';
+    }
+    if (careerLower.includes('education') || careerLower.includes('teaching') || careerLower.includes('teacher')) {
+      return 'Education / Teaching';
+    }
+    if (careerLower.includes('sustainability') || careerLower.includes('environment') || careerLower.includes('climate')) {
+      return 'Sustainability / Environment';
+    }
+    return 'Other';
+  };
+
+  // Filter functions
+  const toggleMajor = (major: string) => {
+    setSelectedMajors(prev => 
+      prev.includes(major) 
+        ? prev.filter(m => m !== major)
+        : [...prev, major]
+    );
+  };
+
+  const toggleCareerType = (careerType: string) => {
+    setSelectedCareerTypes(prev => 
+      prev.includes(careerType) 
+        ? prev.filter(c => c !== careerType)
+        : [...prev, careerType]
+    );
+  };
+
+  const clearAllFilters = () => {
+    setSelectedMajors([]);
+    setSelectedCareerTypes([]);
+    setSelectedYears([]);
+  };
+
+  // Filtered journeys using OR logic
+  const filteredJourneys = useMemo(() => {
+    if (selectedMajors.length === 0 && selectedCareerTypes.length === 0 && selectedYears.length === 0) {
+      return allJourneys;
+    }
+
+    return allJourneys.filter(journey => {
+      const majorMatch = selectedMajors.length === 0 || selectedMajors.includes(getMajorCategory(journey.major || ''));
+      const careerMatch = selectedCareerTypes.length === 0 || selectedCareerTypes.includes(getCareerTypeCategory(journey.industry || ''));
+      const yearMatch = selectedYears.length === 0 || selectedYears.includes(journey.graduationYear || '');
+
+      return majorMatch && careerMatch && yearMatch;
+    });
+  }, [allJourneys, selectedMajors, selectedCareerTypes, selectedYears]);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
@@ -83,8 +181,16 @@ const Index = () => {
           </p>
         </div>
 
+        <FilterSection
+          selectedMajors={selectedMajors}
+          selectedCareerTypes={selectedCareerTypes}
+          onMajorToggle={toggleMajor}
+          onCareerTypeToggle={toggleCareerType}
+          onClearAll={clearAllFilters}
+        />
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-          {allJourneys.map((career) => (
+          {filteredJourneys.map((career) => (
             <CareerCard
               key={career.id}
               career={career}
