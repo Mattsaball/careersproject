@@ -23,14 +23,14 @@ interface FilterSectionProps {
   ];
 
   const careerTypeCategories = [
-    "Business / Finance",
-    "Engineering / Tech", 
-    "Healthcare / Life Sciences",
-    "Academia / Graduate School",
-    "Government / Policy / Legal",
-    "Media / Arts / Museums",
-    "Education / Teaching",
-    "Sustainability / Environment"
+    "Business/Finance",
+    "Engineering/Tech", 
+    "Healthcare/Life Sciences",
+    "Academia/Graduate School",
+    "Government/Policy/Legal",
+    "Media/Arts/Museums",
+    "Education/Teaching",
+    "Sustainability/Environment"
   ];
 
 export const FilterSection = ({
