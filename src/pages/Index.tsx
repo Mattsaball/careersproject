@@ -18,19 +18,56 @@ const Index = () => {
   const [selectedCareerTypes, setSelectedCareerTypes] = useState<string[]>([]);
 
   const handleMajorToggle = (major: string) => {
-    // No functionality yet - just placeholder
-    console.log("Major toggled:", major);
+    setSelectedMajors(prev => 
+      prev.includes(major) 
+        ? prev.filter(m => m !== major)
+        : [...prev, major]
+    );
   };
 
   const handleCareerTypeToggle = (careerType: string) => {
-    // No functionality yet - just placeholder  
-    console.log("Career type toggled:", careerType);
+    setSelectedCareerTypes(prev =>
+      prev.includes(careerType)
+        ? prev.filter(ct => ct !== careerType) 
+        : [...prev, careerType]
+    );
   };
 
   const handleClearAll = () => {
-    // No functionality yet - just placeholder
-    console.log("Clear all filters");
+    setSelectedMajors([]);
+    setSelectedCareerTypes([]);
   };
+
+  // Filter journeys based on selected filters
+  const filteredJourneys = allJourneys.filter(journey => {
+    // If no filters selected, show all
+    if (selectedMajors.length === 0 && selectedCareerTypes.length === 0) {
+      return true;
+    }
+
+    let matchesMajor = selectedMajors.length === 0;
+    let matchesCareer = selectedCareerTypes.length === 0;
+
+    // Check major filter
+    if (selectedMajors.length > 0) {
+      matchesMajor = selectedMajors.some(selectedMajor => 
+        journey.major?.toLowerCase().includes(selectedMajor.toLowerCase()) ||
+        journey.major?.toLowerCase().includes(selectedMajor.replace(' & ', '/').toLowerCase()) ||
+        journey.major?.toLowerCase().includes(selectedMajor.replace('/', ' & ').toLowerCase())
+      );
+    }
+
+    // Check career filter  
+    if (selectedCareerTypes.length > 0) {
+      matchesCareer = selectedCareerTypes.some(selectedCareer =>
+        journey.industry?.toLowerCase().includes(selectedCareer.toLowerCase()) ||
+        journey.industry?.toLowerCase().includes(selectedCareer.replace(' / ', '/').toLowerCase()) ||
+        journey.industry?.toLowerCase().includes(selectedCareer.replace('/', ' / ').toLowerCase())
+      );
+    }
+
+    return matchesMajor && matchesCareer;
+  });
 
   useEffect(() => {
     fetch("http://localhost:8080/api/journeys")
@@ -112,7 +149,7 @@ const Index = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-          {allJourneys.map((career) => (
+          {filteredJourneys.map((career) => (
             <CareerCard
               key={career.id}
               career={career}
