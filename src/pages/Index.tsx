@@ -48,29 +48,25 @@ const Index = () => {
     let matchesMajor = selectedMajors.length === 0;
     let matchesCareer = selectedCareerTypes.length === 0;
 
-    // Check major filter - exact category matching
+    // Check major filter - exact category matching using Major Filter field
     if (selectedMajors.length > 0) {
       matchesMajor = selectedMajors.some(selectedMajor => {
-        const journeyMajor = journey.major?.toLowerCase() || '';
+        const journeyMajorFilter = journey.majorFilter?.toLowerCase() || '';
         
-        // Map filter categories to data patterns
+        // Map our filter categories to data patterns in Major Filter
         switch(selectedMajor) {
           case "Business & Finance":
-            return journeyMajor.includes('business') || journeyMajor.includes('finance') || journeyMajor.includes('economics');
+            return journeyMajorFilter.includes('business') || journeyMajorFilter.includes('finance');
           case "Science & Health Sciences":
-            return journeyMajor.includes('biology') || journeyMajor.includes('chemistry') || journeyMajor.includes('physics') || 
-                   journeyMajor.includes('science') || journeyMajor.includes('health') || journeyMajor.includes('medical');
+            return journeyMajorFilter.includes('science') || journeyMajorFilter.includes('health');
           case "Engineering & Math":
-            return journeyMajor.includes('engineering') || journeyMajor.includes('math') || journeyMajor.includes('computer');
+            return journeyMajorFilter.includes('engineering') || journeyMajorFilter.includes('math');
           case "Humanities":
-            return journeyMajor.includes('english') || journeyMajor.includes('history') || journeyMajor.includes('philosophy') ||
-                   journeyMajor.includes('literature') || journeyMajor.includes('humanities');
+            return journeyMajorFilter.includes('humanities');
           case "Social Sciences":
-            return journeyMajor.includes('psychology') || journeyMajor.includes('sociology') || journeyMajor.includes('political') ||
-                   journeyMajor.includes('anthropology') || journeyMajor.includes('social');
+            return journeyMajorFilter.includes('social');
           case "Arts & Media":
-            return journeyMajor.includes('art') || journeyMajor.includes('media') || journeyMajor.includes('design') ||
-                   journeyMajor.includes('music') || journeyMajor.includes('theater') || journeyMajor.includes('film');
+            return journeyMajorFilter.includes('arts') || journeyMajorFilter.includes('media');
           default:
             return false;
         }

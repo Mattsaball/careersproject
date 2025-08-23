@@ -15,6 +15,7 @@ export const careerJourneys: CareerJourney[] = (reflectsData as any[]).map((entr
   industry: entry["Career Filter"] || "",
   graduationYear: entry["Year"] || "",
   major: entry["What is your Major(s) and Minor(s)?"] || "",
+  majorFilter: entry["Major Filter"] || "",
   postGradPlans: entry["Post Grad Plans"] || "",
   careerPath: entry["Previous experiences and career path"] || "",
   freshmanAdvice: entry["What would you have done differently as a freshman or sophomore to better prepare for your career?"] || "",
