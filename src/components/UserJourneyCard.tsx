@@ -25,7 +25,7 @@ export const UserJourneyCard = ({
             </h3>
             {graduationYear && (
               <p className="text-muted-foreground text-sm">
-                Class of {graduationYear}
+                {graduationYear}
               </p>
             )}
           </div>
