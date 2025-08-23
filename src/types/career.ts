@@ -2,8 +2,6 @@ export interface CareerJourney {
   id: string;
   company: string;
   industry: string;
-  majorFilter?: string;
-  careerFilter?: string;
   graduationYear: string;
   major: string;
   postGradPlans: string;

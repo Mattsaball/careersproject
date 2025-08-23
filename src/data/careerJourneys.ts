@@ -13,8 +13,6 @@ export const careerJourneys: CareerJourney[] = (reflectsData as any[]).map((entr
     return "";
   })(),
   industry: entry["Career Filter"] || "",
-  majorFilter: entry["Major Filter"] || "",
-  careerFilter: entry["Career Filter"] || "",
   graduationYear: entry["Year"] || "",
   major: entry["What is your Major(s) and Minor(s)?"] || "",
   postGradPlans: entry["Post Grad Plans"] || "",
