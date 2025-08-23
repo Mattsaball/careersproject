@@ -10,6 +10,4 @@ export interface CareerJourney {
   skillsToFocus: string;
   shortcuts: string;
   additionalAdvice: string;
-  majorFilter?: string;
-  careerFilter?: string;
 }

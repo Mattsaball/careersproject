@@ -20,7 +20,5 @@ export const careerJourneys: CareerJourney[] = (reflectsData as any[]).map((entr
   freshmanAdvice: entry["What would you have done differently as a freshman or sophomore to better prepare for your career?"] || "",
   skillsToFocus: entry["Skills to focus on"] || "",
   shortcuts: entry["Hacks and shortcuts"] || "",
-  additionalAdvice: entry["Additional advice"] || "",
-  majorFilter: entry["Major Filter"] || "",
-  careerFilter: entry["Career Filter"] || "",
+  additionalAdvice: entry["Additional advice"] || ""
 }));

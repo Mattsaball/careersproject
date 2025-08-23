@@ -21,13 +21,38 @@ const Index = () => {
   const [selectedYears, setSelectedYears] = useState<string[]>([]);
 
   useEffect(() => {
-    // Load static journeys from reflects.json via the careerJourneys import
-    const staticNormalized = staticJourneys.map((journey) => ({
-      ...journey,
-      id: `static-${journey.id}`, // prefix static ids
-    }));
+    fetch("http://localhost:8080/api/journeys")
+      .then((res) => res.json())
+      .then((data) => {
+        const backendJourneys = data.map((journey: any, index: number) => ({
+          id: `backend-${journey.id || index}`,
+          postGradPlans: journey.advice || "No post-grad plans shared yet",
+          graduationYear: journey.graduationYear || "N/A",
+          name: journey.anonymous ? "Anonymous" : journey.name || "Unnamed",
+          linkedin: journey.anonymous ? "" : journey.linkedin || "",
+          summers: journey.summers || [],
+          clubs: journey.clubs || "N/A",
+          resources: journey.resources || "N/A",
+          missed: journey.missed || "N/A",
+          advice: journey.advice || "N/A",
+          anonymous: journey.anonymous ?? true,
+        }));
 
-    setAllJourneys(staticNormalized);
+        const staticNormalized = staticJourneys.map((journey) => ({
+          ...journey,
+          id: `static-${journey.id}`, // prefix static ids
+        }));
+
+        setAllJourneys([...staticNormalized, ...backendJourneys]);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch backend journeys:", err);
+        const staticNormalized = staticJourneys.map((journey) => ({
+          ...journey,
+          id: `static-${journey.id}`,
+        }));
+        setAllJourneys(staticNormalized);
+      });
   }, []);
 
   const handleCardClick = (id: string) => {
@@ -48,36 +73,28 @@ const Index = () => {
     setIsModalOpen(false);
   };
 
-  // Major category mapping - now using the Major Filter field from data
-  const getMajorCategory = (journey: CareerJourney): string[] => {
-    // Use the majorFilter field if available (from reflects.json)
-    const majorFilter = journey.majorFilter || '';
-    if (majorFilter) {
-      return majorFilter.split('||').map((cat: string) => cat.trim());
-    }
-    
-    // Fallback to mapping from the actual major text if majorFilter is not available
-    const majorLower = journey.major.toLowerCase();
-    const categories = [];
+  // Major category mapping
+  const getMajorCategory = (major: string): string => {
+    const majorLower = major.toLowerCase();
     if (majorLower.includes('business') || majorLower.includes('finance') || majorLower.includes('economics') || majorLower.includes('accounting')) {
-      categories.push('Business & Finance');
+      return 'Business & Finance';
     }
     if (majorLower.includes('biology') || majorLower.includes('chemistry') || majorLower.includes('physics') || majorLower.includes('medicine') || majorLower.includes('health') || majorLower.includes('science')) {
-      categories.push('Science & Health Sciences');
+      return 'Science & Health Sciences';
     }
     if (majorLower.includes('engineering') || majorLower.includes('computer') || majorLower.includes('math') || majorLower.includes('technology')) {
-      categories.push('Engineering & Math');
+      return 'Engineering & Math';
     }
     if (majorLower.includes('history') || majorLower.includes('literature') || majorLower.includes('philosophy') || majorLower.includes('language') || majorLower.includes('humanities')) {
-      categories.push('Humanities');
+      return 'Humanities';
     }
     if (majorLower.includes('psychology') || majorLower.includes('sociology') || majorLower.includes('anthropology') || majorLower.includes('political') || majorLower.includes('social')) {
-      categories.push('Social Sciences');
+      return 'Social Sciences';
     }
     if (majorLower.includes('art') || majorLower.includes('music') || majorLower.includes('theater') || majorLower.includes('media') || majorLower.includes('design')) {
-      categories.push('Arts & Media');
+      return 'Arts & Media';
     }
-    return categories.length > 0 ? categories : ['Other'];
+    return 'Other';
   };
 
   // Career type mapping
@@ -133,25 +150,18 @@ const Index = () => {
     setSelectedYears([]);
   };
 
-  // Filtered journeys using OR logic between major and career type
+  // Filtered journeys using OR logic
   const filteredJourneys = useMemo(() => {
     if (selectedMajors.length === 0 && selectedCareerTypes.length === 0 && selectedYears.length === 0) {
       return allJourneys;
     }
 
     return allJourneys.filter(journey => {
-      const majorCategories = getMajorCategory(journey);
-      const majorMatch = selectedMajors.length === 0 || selectedMajors.some(selectedMajor => 
-        majorCategories.includes(selectedMajor)
-      );
-      
+      const majorMatch = selectedMajors.length === 0 || selectedMajors.includes(getMajorCategory(journey.major || ''));
       const careerMatch = selectedCareerTypes.length === 0 || selectedCareerTypes.includes(getCareerTypeCategory(journey.industry || ''));
       const yearMatch = selectedYears.length === 0 || selectedYears.includes(journey.graduationYear || '');
 
-      // OR logic between major and career type, AND with year
-      const majorOrCareerMatch = (selectedMajors.length === 0 && selectedCareerTypes.length === 0) || majorMatch || careerMatch;
-      
-      return majorOrCareerMatch && yearMatch;
+      return majorMatch && careerMatch && yearMatch;
     });
   }, [allJourneys, selectedMajors, selectedCareerTypes, selectedYears]);
 
