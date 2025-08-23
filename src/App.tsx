@@ -2,28 +2,88 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "./hooks/useAuth";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-
+import Contribute from "./pages/Contribute";
+import LoginPage from "./pages/Login";
+import RegisterPage from "./pages/Register";
+import RequireAuth from "./components/RequireAuth";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const AppHeader = () => {
+  const { auth, logout } = useAuth();
+  const navigate = useNavigate();
 
-export default App;
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
+  return (
+    <div className="flex justify-between items-center p-4 bg-white shadow-sm">
+      <Link to="/">
+        <h1 className="text-xl font-bold">CU Journeys</h1>
+      </Link>
+      <div className="flex gap-4 items-center">
+        <Link to="/contribute">
+          <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Contribute
+          </button>
+        </Link>
+        {auth ? (
+          <>
+            <span className="text-sm">
+              Hi, {auth.user?.name ?? auth.user?.email}
+            </span>
+            <button
+              onClick={handleLogout}
+              className="text-red-500 hover:underline"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/login" className="text-blue-600 hover:underline">
+              Login
+            </Link>
+            <Link to="/register" className="text-blue-600 hover:underline">
+              Register
+            </Link>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <AuthProvider>
+          <AppHeader />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route
+              path="/contribute"
+              element={
+                <RequireAuth>
+                  <Contribute />
+                </RequireAuth>
+              }
+            />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
