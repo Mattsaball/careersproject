@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { CareerCard } from "@/components/CareerCard";
 import { CareerModal } from "@/components/CareerModal";
 import { UserJourneyModal } from "@/components/UserJourneyModal";
+import { FilterSection } from "@/components/FilterSection";
 import { careerJourneys as staticJourneys } from "@/data/careerJourneys";
 import { CareerJourney } from "@/types/career";
 import { GraduationCap } from "lucide-react";
@@ -13,6 +14,23 @@ const Index = () => {
   const [selectedUserJourney, setSelectedUserJourney] =
     useState<CareerJourney | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedMajors, setSelectedMajors] = useState<string[]>([]);
+  const [selectedCareerTypes, setSelectedCareerTypes] = useState<string[]>([]);
+
+  const handleMajorToggle = (major: string) => {
+    // No functionality yet - just placeholder
+    console.log("Major toggled:", major);
+  };
+
+  const handleCareerTypeToggle = (careerType: string) => {
+    // No functionality yet - just placeholder  
+    console.log("Career type toggled:", careerType);
+  };
+
+  const handleClearAll = () => {
+    // No functionality yet - just placeholder
+    console.log("Clear all filters");
+  };
 
   useEffect(() => {
     fetch("http://localhost:8080/api/journeys")
@@ -81,6 +99,16 @@ const Index = () => {
             Explore inspiring career paths and learn from real experiences
             across different industries and fields.
           </p>
+        </div>
+
+        <div className="max-w-7xl mx-auto">
+          <FilterSection
+            selectedMajors={selectedMajors}
+            selectedCareerTypes={selectedCareerTypes}
+            onMajorToggle={handleMajorToggle}
+            onCareerTypeToggle={handleCareerTypeToggle}
+            onClearAll={handleClearAll}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
