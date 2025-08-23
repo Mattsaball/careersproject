@@ -113,19 +113,22 @@ const Index = () => {
       setFilteredJourneys(allJourneys);
     } else {
       const filtered = allJourneys.filter(journey => {
-        const majorMatch = matchesMajorFilter(journey, selectedMajors);
-        const careerMatch = matchesCareerFilter(journey, selectedCareerTypes);
+        // For each filter type, if filters are selected, journey must match at least one
+        const majorMatch = selectedMajors.length === 0 || matchesMajorFilter(journey, selectedMajors);
+        const careerMatch = selectedCareerTypes.length === 0 || matchesCareerFilter(journey, selectedCareerTypes);
         
-        // OR logic: show if matches any selected filter
-        const shouldShow = majorMatch || careerMatch;
+        // AND logic: journey must match both filter types (if they have selections)
+        const shouldShow = majorMatch && careerMatch;
         
-        if (shouldShow) {
+        if (shouldShow && (selectedMajors.length > 0 || selectedCareerTypes.length > 0)) {
           console.log('Journey matched:', {
             id: journey.id,
             majorFilter: journey.majorFilter,
             careerFilter: journey.careerFilter,
             majorMatch,
-            careerMatch
+            careerMatch,
+            selectedMajors,
+            selectedCareerTypes
           });
         }
         
