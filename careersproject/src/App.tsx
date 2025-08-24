@@ -1,8 +1,15 @@
+// src/App.tsx
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+} from "react-router-dom";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -11,10 +18,14 @@ import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
 import RequireAuth from "./components/RequireAuth";
 
+// ⬅️ ensure axios has Authorization from localStorage right away
+import { bootstrapAuthFromStorage } from "./api/api";
+bootstrapAuthFromStorage();
+
 const queryClient = new QueryClient();
 
 const AppHeader = () => {
-  const { auth, logout } = useAuth();
+  const { auth, logout, booting } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -27,13 +38,16 @@ const AppHeader = () => {
       <Link to="/">
         <h1 className="text-xl font-bold">CU Journeys</h1>
       </Link>
+
       <div className="flex gap-4 items-center">
-        <Link to="/contribute">
+        <Link to="/contribute" className="inline-block">
           <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
             Contribute
           </button>
         </Link>
-        {auth ? (
+
+        {/* Avoid header flicker while /auth/me is validating */}
+        {booting ? null : auth ? (
           <>
             <span className="text-sm">
               Hi, {auth.user?.name ?? auth.user?.email}
@@ -66,23 +80,25 @@ export default function App() {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <AuthProvider>
-          <AppHeader />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route
-              path="/contribute"
-              element={
-                <RequireAuth>
-                  <Contribute />
-                </RequireAuth>
-              }
-            />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <AppHeader />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route
+                path="/contribute"
+                element={
+                  <RequireAuth>
+                    <Contribute />
+                  </RequireAuth>
+                }
+              />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AuthProvider>
+        </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
   );
