@@ -1,40 +1,61 @@
 package com.cujourneys.backend.auth;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
+import com.cujourneys.backend.auth.dto.AuthResponse;
+import com.cujourneys.backend.auth.dto.LoginRequest;
+import com.cujourneys.backend.auth.dto.RegisterRequest;
+import com.cujourneys.backend.auth.dto.UserResponse;
+import com.cujourneys.backend.jwt.JWTService;
 import com.cujourneys.backend.model.User;
 import com.cujourneys.backend.repository.UserRepository;
-
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+// AuthService.java (register method)
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepo;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JWTService jwtService;
 
-    public AuthService(UserRepository userRepo, PasswordEncoder passwordEncoder) {
-        this.userRepo = userRepo;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    public User register(String name, String email, String rawPassword) {
-        String normalized = email.toLowerCase().trim();
-        if (userRepo.existsByEmailIgnoreCase(normalized)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "EMAIL_TAKEN");
+    public AuthResponse register(RegisterRequest req) {
+        if (req == null || req.getEmail() == null || req.getPassword() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing fields");
         }
-        User u = new User();
-        u.setName(name);
-        u.setEmail(normalized);
-        u.setPassword(passwordEncoder.encode(rawPassword)); // BCrypt
-        u.setRole("USER");
-        return userRepo.save(u);
+    
+        if (userRepository.findByEmailIgnoreCase(req.getEmail()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
+        }
+    
+        try {
+            User user = new User();
+            user.setName(req.getName());
+            user.setEmail(req.getEmail());
+            user.setPassword(passwordEncoder.encode(req.getPassword())); // ensure PasswordEncoder @Bean exists
+            userRepository.save(user);
+    
+            String token = jwtService.generateToken(user);
+            return new AuthResponse(token, UserResponse.from(user));
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Registration failed");
+        }
     }
 
-    public User validateLogin(String email, String rawPassword) {
-        return userRepo.findByEmailIgnoreCase(email.toLowerCase().trim())
-            .filter(u -> passwordEncoder.matches(rawPassword, u.getPassword()))
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "INVALID_CREDENTIALS"));
+    public AuthResponse login(LoginRequest req) {
+        User user = userRepository.findByEmailIgnoreCase(req.getEmail())
+                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+
+        if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid email or password");
+        }
+
+        String token = jwtService.generateToken(user);
+        return new AuthResponse(token, UserResponse.from(user));
     }
 }
