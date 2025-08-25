@@ -4,7 +4,6 @@ export interface CareerJourney {
   industry: string;
   graduationYear: string;
   major: string;
-  majorFilter?: string;
   postGradPlans: string;
   careerPath: string;
   freshmanAdvice: string;

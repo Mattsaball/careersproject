@@ -23,8 +23,8 @@
 
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["careersproject/src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["careersproject/src"]
 }
