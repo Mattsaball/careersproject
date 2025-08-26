@@ -1,26 +1,19 @@
+// src/components/RequireAuth.tsx
+import { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
-export default function RequireAuth({ children }: { children: JSX.Element }) {
+export default function RequireAuth({ children }: { children: ReactNode }) {
   const location = useLocation();
-  const authRaw = localStorage.getItem("auth");
+  const { user, booting } = useAuth();
 
-  let token: string | null = null;
-  if (authRaw) {
-    try {
-      token = JSON.parse(authRaw)?.token || null;
-    } catch {
-      token = null;
-    }
+  // Wait for /auth/me validation to finish before deciding
+  if (booting) return null; // or a tiny spinner
+
+  if (!user) {
+    const next = encodeURIComponent(location.pathname);
+    return <Navigate to={`/login?next=${next}`} replace />;
   }
 
-  if (!token) {
-    return (
-      <Navigate
-        to={`/login?next=${encodeURIComponent(location.pathname)}`}
-        replace
-      />
-    );
-  }
-
-  return children;
+  return <>{children}</>;
 }

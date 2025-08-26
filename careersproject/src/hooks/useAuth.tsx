@@ -1,109 +1,62 @@
 // src/hooks/useAuth.tsx
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { api, tokenStore } from "@/api/api"; // <- use your existing api.ts
+import axios from "axios";
+import { setAuthToken, clearAuthToken, tokenStore } from "@/api/api";
 
-type User = { id: number; email: string; name?: string };
-type Auth = { token: string; user: User } | null;
+type User = { id: number; name: string; email: string };
 
-type AuthCtx = {
-  auth: Auth;
-  isBootstrapped: boolean;
-  login: (token: string, user?: User) => Promise<void>;
+type AuthContextType = {
+  user: User | null;
+  booting: boolean;
+  login: (token: string, user: User) => Promise<void> | void;
   logout: () => void;
-  setUser: (u: User | null) => void;
 };
 
-const Ctx = createContext<AuthCtx>({
-  auth: null,
-  isBootstrapped: false,
-  // noops; real impl is below
-  login: async () => {},
-  logout: () => {},
-  setUser: () => {},
-});
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [auth, setAuth] = useState<Auth>(null);
-  const [isBootstrapped, setBootstrapped] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [booting, setBooting] = useState(true);
 
-  // ---- Boot check once ----
+  // On first mount, if a token exists, validate it and hydrate user
   useEffect(() => {
-    // 1) migrate any legacy "auth" from localStorage (your old format)
-    const legacyRaw = localStorage.getItem("auth");
-    if (legacyRaw && !tokenStore.get()) {
-      try {
-        const legacy = JSON.parse(legacyRaw) as Auth;
-        if (legacy?.token) tokenStore.set(legacy.token);
-      } catch {}
-    }
-
-    const token = tokenStore.get();
+    const token = tokenStore.get?.(); // depends on your api.ts; use correct getter
     if (!token) {
-      // no token → nothing to verify
-      localStorage.removeItem("auth");
-      setAuth(null);
-      setBootstrapped(true);
+      setBooting(false);
       return;
     }
-
-    // 2) verify current token
-    api
-      .get<User>("/api/auth/me")
-      .then((r) => {
-        const user = r.data;
-        const nextAuth = { token, user };
-        setAuth(nextAuth);
-        localStorage.setItem("auth", JSON.stringify(nextAuth)); // keep for quick reloads
-      })
+    setAuthToken(token); // sets axios default Authorization
+    axios
+      .get("/api/auth/me")
+      .then((res) => setUser(res.data)) // ensure /me returns {id,name,email}
       .catch(() => {
-        // invalid/expired token
-        tokenStore.clear();
-        localStorage.removeItem("auth");
-        setAuth(null);
+        clearAuthToken();
+        setUser(null);
       })
-      .finally(() => setBootstrapped(true));
+      .finally(() => setBooting(false));
   }, []);
 
-  // ---- API: login / logout / setUser ----
-  const login = async (token: string, user?: User) => {
-    tokenStore.set(token);
-    if (user) {
-      const next = { token, user };
-      setAuth(next);
-      localStorage.setItem("auth", JSON.stringify(next));
-      return;
-    }
-    // if user not provided, fetch via /me
-    const { data } = await api.get<User>("/api/auth/me");
-    const next = { token, user: data };
-    setAuth(next);
-    localStorage.setItem("auth", JSON.stringify(next));
-  };
-
-  const logout = () => {
-    tokenStore.clear();
-    localStorage.removeItem("auth");
-    setAuth(null);
-    // optional: hard redirect to login
-    // window.location.href = "/login";
-  };
-
-  const setUser = (u: User | null) => {
-    if (!u || !auth) {
-      logout();
-      return;
-    }
-    const next = { ...auth, user: u };
-    setAuth(next);
-    localStorage.setItem("auth", JSON.stringify(next));
-  };
-
-  const value = useMemo(
-    () => ({ auth, isBootstrapped, login, logout, setUser }),
-    [auth, isBootstrapped]
+  const value = useMemo<AuthContextType>(
+    () => ({
+      user,
+      booting,
+      async login(token, u) {
+        setAuthToken(token); // persist + axios header
+        setUser(u);
+      },
+      logout() {
+        clearAuthToken();
+        setUser(null);
+      },
+    }),
+    [user, booting]
   );
 
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-export const useAuth = () => useContext(Ctx);
+export function useAuth() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within <AuthProvider>");
+  return ctx;
+}
