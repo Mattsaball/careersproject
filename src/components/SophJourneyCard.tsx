@@ -28,9 +28,9 @@ export const SophJourneyCard = ({ journey, onClick }: SophJourneyCardProps) => {
             
             {/* Freshman Summer */}
             <div className="mb-2">
-              <h4 className="text-sm font-medium text-card-foreground group-hover:text-primary transition-colors line-clamp-1">
+              <h3 className="text-lg font-semibold text-card-foreground group-hover:text-primary transition-colors line-clamp-2">
                 {journey.freshmanSummerJob || "No freshman summer job shared yet"}
-              </h4>
+              </h3>
               <p className="text-xs text-muted-foreground">
                 Freshman Summer
               </p>
