@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { CareerCard } from "@/components/CareerCard";
 import { CareerModal } from "@/components/CareerModal";
 import { UserJourneyModal } from "@/components/UserJourneyModal";
@@ -14,11 +14,97 @@ const Index = () => {
   const [selectedUserJourney, setSelectedUserJourney] =
     useState<CareerJourney | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  // Filter states
   const [selectedMajors, setSelectedMajors] = useState<string[]>([]);
   const [selectedCareerTypes, setSelectedCareerTypes] = useState<string[]>([]);
-  const [selectedYears, setSelectedYears] = useState<string[]>([]);
+
+  const handleMajorToggle = (major: string) => {
+    setSelectedMajors(prev => 
+      prev.includes(major) 
+        ? prev.filter(m => m !== major)
+        : [...prev, major]
+    );
+  };
+
+  const handleCareerTypeToggle = (careerType: string) => {
+    setSelectedCareerTypes(prev =>
+      prev.includes(careerType)
+        ? prev.filter(ct => ct !== careerType) 
+        : [...prev, careerType]
+    );
+  };
+
+  const handleClearAll = () => {
+    setSelectedMajors([]);
+    setSelectedCareerTypes([]);
+  };
+
+  // Filter journeys based on selected filters
+  const filteredJourneys = allJourneys.filter(journey => {
+    // If no filters selected, show all
+    if (selectedMajors.length === 0 && selectedCareerTypes.length === 0) {
+      return true;
+    }
+
+    let matchesMajor = false;
+    let matchesCareer = false;
+
+    // Check major filter - exact category matching using Major Filter field
+    if (selectedMajors.length > 0) {
+      matchesMajor = selectedMajors.some(selectedMajor => {
+        const journeyMajorFilter = journey.majorFilter?.toLowerCase() || '';
+        
+        // Map our filter categories to data patterns in Major Filter
+        switch(selectedMajor) {
+          case "Business & Finance":
+            return journeyMajorFilter.includes('business') || journeyMajorFilter.includes('finance');
+          case "Science & Health Sciences":
+            return journeyMajorFilter.includes('science') || journeyMajorFilter.includes('health');
+          case "Engineering & Math":
+            return journeyMajorFilter.includes('engineering') || journeyMajorFilter.includes('math');
+          case "Humanities":
+            return journeyMajorFilter.includes('humanities');
+          case "Social Sciences":
+            return journeyMajorFilter.includes('social');
+          case "Arts & Media":
+            return journeyMajorFilter.includes('arts') || journeyMajorFilter.includes('media');
+          default:
+            return false;
+        }
+      });
+    }
+
+    // Check career filter - exact category matching
+    if (selectedCareerTypes.length > 0) {
+      matchesCareer = selectedCareerTypes.some(selectedCareer => {
+        const journeyCareer = journey.industry?.toLowerCase() || '';
+        
+        // Map filter categories to data patterns
+        switch(selectedCareer) {
+          case "Business / Finance":
+            return journeyCareer.includes('business') || journeyCareer.includes('finance') || journeyCareer.includes('consulting');
+          case "Engineering / Tech":
+            return journeyCareer.includes('tech') || journeyCareer.includes('engineering') || journeyCareer.includes('software');
+          case "Healthcare / Life Sciences":
+            return journeyCareer.includes('health') || journeyCareer.includes('medical') || journeyCareer.includes('life sciences');
+          case "Academia / Graduate School":
+            return journeyCareer.includes('academia') || journeyCareer.includes('graduate') || journeyCareer.includes('research');
+          case "Government / Policy / Legal":
+            return journeyCareer.includes('government') || journeyCareer.includes('policy') || journeyCareer.includes('legal') || journeyCareer.includes('law');
+          case "Media / Arts / Museums":
+            return journeyCareer.includes('media') || journeyCareer.includes('arts') || journeyCareer.includes('museum');
+          case "Education / Teaching":
+            return journeyCareer.includes('education') || journeyCareer.includes('teaching') || journeyCareer.includes('school');
+          case "Sustainability / Environment":
+            return journeyCareer.includes('sustainability') || journeyCareer.includes('environment') || journeyCareer.includes('green');
+          default:
+            return false;
+        }
+      });
+    }
+
+    // Use OR logic - show if matches either major OR career filter
+    return matchesMajor || matchesCareer;
+  });
 
   useEffect(() => {
     fetch("http://localhost:8080/api/journeys")
@@ -73,130 +159,6 @@ const Index = () => {
     setIsModalOpen(false);
   };
 
-  // Major category mapping
-  const getMajorCategory = (major: string): string => {
-    const majorLower = major.toLowerCase();
-    if (majorLower.includes('business') || majorLower.includes('finance') || majorLower.includes('economics') || majorLower.includes('accounting')) {
-      return 'Business & Finance';
-    }
-    if (majorLower.includes('biology') || majorLower.includes('chemistry') || majorLower.includes('physics') || majorLower.includes('medicine') || majorLower.includes('health') || majorLower.includes('science')) {
-      return 'Science & Health Sciences';
-    }
-    if (majorLower.includes('engineering') || majorLower.includes('computer') || majorLower.includes('math') || majorLower.includes('technology')) {
-      return 'Engineering & Math';
-    }
-    if (majorLower.includes('history') || majorLower.includes('literature') || majorLower.includes('philosophy') || majorLower.includes('language') || majorLower.includes('humanities')) {
-      return 'Humanities';
-    }
-    if (majorLower.includes('psychology') || majorLower.includes('sociology') || majorLower.includes('anthropology') || majorLower.includes('political') || majorLower.includes('social')) {
-      return 'Social Sciences';
-    }
-    if (majorLower.includes('art') || majorLower.includes('music') || majorLower.includes('theater') || majorLower.includes('media') || majorLower.includes('design')) {
-      return 'Arts & Media';
-    }
-    return 'Other';
-  };
-
-  // Career type mapping
-  const getCareerTypeCategory = (careerType: string): string => {
-    const careerLower = careerType.toLowerCase();
-    if (careerLower.includes('business') || careerLower.includes('finance') || careerLower.includes('banking') || careerLower.includes('consulting')) {
-      return 'Business / Finance';
-    }
-    if (careerLower.includes('engineering') || careerLower.includes('tech') || careerLower.includes('software') || careerLower.includes('computer')) {
-      return 'Engineering / Tech';
-    }
-    if (careerLower.includes('healthcare') || careerLower.includes('medical') || careerLower.includes('life sciences') || careerLower.includes('biology')) {
-      return 'Healthcare / Life Sciences';
-    }
-    if (careerLower.includes('academia') || careerLower.includes('graduate') || careerLower.includes('research') || careerLower.includes('phd')) {
-      return 'Academia / Graduate School';
-    }
-    if (careerLower.includes('government') || careerLower.includes('policy') || careerLower.includes('legal') || careerLower.includes('law')) {
-      return 'Government / Policy / Legal';
-    }
-    if (careerLower.includes('media') || careerLower.includes('arts') || careerLower.includes('museum') || careerLower.includes('creative')) {
-      return 'Media / Arts / Museums';
-    }
-    if (careerLower.includes('education') || careerLower.includes('teaching') || careerLower.includes('teacher')) {
-      return 'Education / Teaching';
-    }
-    if (careerLower.includes('sustainability') || careerLower.includes('environment') || careerLower.includes('climate')) {
-      return 'Sustainability / Environment';
-    }
-    return 'Other';
-  };
-
-  // Filter functions
-  const toggleMajor = (major: string) => {
-    setSelectedMajors(prev => 
-      prev.includes(major) 
-        ? prev.filter(m => m !== major)
-        : [...prev, major]
-    );
-  };
-
-  const toggleCareerType = (careerType: string) => {
-    setSelectedCareerTypes(prev => 
-      prev.includes(careerType) 
-        ? prev.filter(c => c !== careerType)
-        : [...prev, careerType]
-    );
-  };
-
-  const clearAllFilters = () => {
-    setSelectedMajors([]);
-    setSelectedCareerTypes([]);
-    setSelectedYears([]);
-  };
-
-  // Helper function to check if major filter matches
-  const majorFilterMatches = (journey: CareerJourney, selectedMajors: string[]): boolean => {
-    if (selectedMajors.length === 0) return true;
-    
-    const majorFilter = journey.majorFilter || '';
-    // Split by || to handle multiple categories and clean up whitespace
-    const majorCategories = majorFilter.split('||').map(cat => cat.trim());
-    
-    // Check if any selected major matches any of the journey's major categories
-    return selectedMajors.some(selectedMajor => 
-      majorCategories.some(journeyCategory => 
-        journeyCategory === selectedMajor
-      )
-    );
-  };
-
-  // Helper function to check if career filter matches
-  const careerFilterMatches = (journey: CareerJourney, selectedCareerTypes: string[]): boolean => {
-    if (selectedCareerTypes.length === 0) return true;
-    
-    const careerFilter = journey.careerFilter || '';
-    // Split by || to handle multiple categories and clean up whitespace
-    const careerCategories = careerFilter.split('||').map(cat => cat.trim());
-    
-    // Check if any selected career type matches any of the journey's career categories
-    return selectedCareerTypes.some(selectedCareer => 
-      careerCategories.some(journeyCategory => 
-        journeyCategory === selectedCareer
-      )
-    );
-  };
-
-  // Filtered journeys using OR logic
-  const filteredJourneys = useMemo(() => {
-    if (selectedMajors.length === 0 && selectedCareerTypes.length === 0 && selectedYears.length === 0) {
-      return allJourneys;
-    }
-
-    return allJourneys.filter(journey => {
-      const majorMatch = majorFilterMatches(journey, selectedMajors);
-      const careerMatch = careerFilterMatches(journey, selectedCareerTypes);
-      const yearMatch = selectedYears.length === 0 || selectedYears.includes(journey.graduationYear || '');
-
-      return majorMatch && careerMatch && yearMatch;
-    });
-  }, [allJourneys, selectedMajors, selectedCareerTypes, selectedYears]);
-
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
@@ -213,13 +175,15 @@ const Index = () => {
           </p>
         </div>
 
-        <FilterSection
-          selectedMajors={selectedMajors}
-          selectedCareerTypes={selectedCareerTypes}
-          onMajorToggle={toggleMajor}
-          onCareerTypeToggle={toggleCareerType}
-          onClearAll={clearAllFilters}
-        />
+        <div className="max-w-7xl mx-auto">
+          <FilterSection
+            selectedMajors={selectedMajors}
+            selectedCareerTypes={selectedCareerTypes}
+            onMajorToggle={handleMajorToggle}
+            onCareerTypeToggle={handleCareerTypeToggle}
+            onClearAll={handleClearAll}
+          />
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
           {filteredJourneys.map((career) => (

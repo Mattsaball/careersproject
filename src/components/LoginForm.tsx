@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import axios from "axios";
 import { useAuth } from "@/hooks/useAuth";
+import { api } from "@/api/api"; // use the shared client (with interceptors)
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setAuth } = useAuth();
+  const { login } = useAuth(); // <-- use login instead of setAuth
   const navigate = useNavigate();
   const [search] = useSearchParams();
   const next = search.get("next") || "/";
@@ -17,19 +17,17 @@ export default function LoginForm() {
     if (loading) return;
     setLoading(true);
     try {
-      const base =
-        (import.meta.env.VITE_API_URL as string) ?? "http://localhost:8080";
-      const res = await axios.post(`${base}/api/auth/login`, {
-        email,
-        password,
-      });
-      const { token, user } = res.data;
-      setAuth({ token, user });
-      navigate(next);
+      const { data } = await api.post("/api/auth/login", { email, password });
+      // expecting { token, user }
+      await login(data.token, data.user);
+      navigate(next, { replace: true });
     } catch (err: any) {
-      if (err?.response?.status === 401)
+      // 401s will also be handled by interceptor (redirect), but keep user-friendly msg:
+      if (err?.response?.status === 401) {
         alert("Email or password is incorrect.");
-      else alert("Login failed. Please try again.");
+      } else {
+        alert("Login failed. Please try again.");
+      }
       console.error(err);
     } finally {
       setLoading(false);
