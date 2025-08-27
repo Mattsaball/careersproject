@@ -1,116 +1,125 @@
-import { useState, useEffect } from "react";
+// src/pages/Index.tsx   (or src/app/page.tsx for Next App Router)
+import { useMemo, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+
+import { careerJourneys } from "@/data/careerJourneys"; // mapped data with industryFilters & majorFilters
+import type { CareerJourney } from "@/types/career";
+
 import { CareerCard } from "@/components/CareerCard";
 import { CareerModal } from "@/components/CareerModal";
-import { UserJourneyModal } from "@/components/UserJourneyModal";
-import { careerJourneys as staticJourneys } from "@/data/careerJourneys";
-import { CareerJourney } from "@/types/career";
-import { GraduationCap } from "lucide-react";
 
-const Index = () => {
-  const [allJourneys, setAllJourneys] = useState<CareerJourney[]>([]);
-  const [selectedStaticCareer, setSelectedStaticCareer] =
-    useState<CareerJourney | null>(null);
-  const [selectedUserJourney, setSelectedUserJourney] =
-    useState<CareerJourney | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const uniqueSorted = (arr: string[]) =>
+  Array.from(new Set(arr)).sort((a, b) => a.localeCompare(b));
 
-  useEffect(() => {
-    fetch("http://localhost:8080/api/journeys")
-      .then((res) => res.json())
-      .then((data) => {
-        const backendJourneys = data.map((journey: any, index: number) => ({
-          id: `backend-${journey.id || index}`,
-          postGradPlans: journey.advice || "No post-grad plans shared yet",
-          graduationYear: journey.graduationYear || "N/A",
-          name: journey.anonymous ? "Anonymous" : journey.name || "Unnamed",
-          linkedin: journey.anonymous ? "" : journey.linkedin || "",
-          summers: journey.summers || [],
-          clubs: journey.clubs || "N/A",
-          resources: journey.resources || "N/A",
-          missed: journey.missed || "N/A",
-          advice: journey.advice || "N/A",
-          anonymous: journey.anonymous ?? true,
-        }));
+export default function Index() {
+  const [selectedMajors, setSelectedMajors] = useState<string[]>([]);
+  const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
+  const [active, setActive] = useState<CareerJourney | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
-        const staticNormalized = staticJourneys.map((journey) => ({
-          ...journey,
-          id: `static-${journey.id}`, // prefix static ids
-        }));
+  // Build filter option lists
+  const majorOptions = useMemo(
+    () => uniqueSorted(careerJourneys.flatMap(j => j.majorFilters || [])),
+    []
+  );
 
-        setAllJourneys([...staticNormalized, ...backendJourneys]);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch backend journeys:", err);
-        const staticNormalized = staticJourneys.map((journey) => ({
-          ...journey,
-          id: `static-${journey.id}`,
-        }));
-        setAllJourneys(staticNormalized);
-      });
-  }, []);
+  const industryOptions = useMemo(
+    () => uniqueSorted(careerJourneys.flatMap(j => j.industryFilters || [])),
+    []
+  );
 
-  const handleCardClick = (id: string) => {
-    const journey = allJourneys.find((j) => j.id === id);
-    if (!journey) return;
+  // Filtering logic (AND across each dimension)
+  const filtered = useMemo(() => {
+    return careerJourneys.filter(j => {
+      const majorsOk =
+        selectedMajors.length === 0 ||
+        selectedMajors.every(m => j.majorFilters.includes(m));
+      const industriesOk =
+        selectedIndustries.length === 0 ||
+        selectedIndustries.every(i => j.industryFilters.includes(i));
+      return majorsOk && industriesOk;
+    });
+  }, [selectedMajors, selectedIndustries]);
 
-    if (id.startsWith("static-")) {
-      setSelectedStaticCareer(journey);
-    } else {
-      setSelectedUserJourney(journey);
-    }
-    setIsModalOpen(true);
+  const toggle = (arr: string[], set: (v: string[]) => void, val: string) =>
+    set(arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val]);
+
+  const openModal = (j: CareerJourney) => {
+    setActive(j);
+    setIsOpen(true);
   };
-
-  const handleCloseModal = () => {
-    setSelectedStaticCareer(null);
-    setSelectedUserJourney(null);
-    setIsModalOpen(false);
-  };
+  const closeModal = () => setIsOpen(false);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <GraduationCap className="h-8 w-8 text-primary" />
-            <h1 className="text-4xl font-bold text-foreground">
-              Career Journey Reflections
-            </h1>
-          </div>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Explore inspiring career paths and learn from real experiences
-            across different industries and fields.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-          {allJourneys.map((career) => (
-            <CareerCard
-              key={career.id}
-              career={career}
-              onClick={() => handleCardClick(career.id)}
-            />
-          ))}
-        </div>
+    <div className="space-y-4">
+      {/* Industry chips (with prefix) */}
+      <div className="flex flex-wrap items-center gap-2">
+        {industryOptions.map(opt => {
+          const isActive = selectedIndustries.includes(opt);
+          return (
+            <Badge
+              key={opt}
+              variant={isActive ? "default" : "outline"}
+              className="cursor-pointer flex items-center gap-1"
+              onClick={() => toggle(selectedIndustries, setSelectedIndustries, opt)}
+            >
+              <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                Industry
+              </span>
+              {opt}
+            </Badge>
+          );
+        })}
+        {selectedIndustries.length > 0 && (
+          <button
+            className="text-xs underline ml-1"
+            onClick={() => setSelectedIndustries([])}
+          >
+            clear industries
+          </button>
+        )}
       </div>
 
-      {selectedStaticCareer && (
-        <CareerModal
-          career={selectedStaticCareer}
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-        />
-      )}
+      {/* Major chips (with prefix) */}
+      <div className="flex flex-wrap items-center gap-2">
+        {majorOptions.map(opt => {
+          const isActive = selectedMajors.includes(opt);
+          return (
+            <Badge
+              key={opt}
+              variant={isActive ? "default" : "outline"}
+              className="cursor-pointer flex items-center gap-1"
+              onClick={() => toggle(selectedMajors, setSelectedMajors, opt)}
+            >
+              <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                Major
+              </span>
+              {opt}
+            </Badge>
+          );
+        })}
+        {selectedMajors.length > 0 && (
+          <button
+            className="text-xs underline ml-1"
+            onClick={() => setSelectedMajors([])}
+          >
+            clear majors
+          </button>
+        )}
+      </div>
 
-      {selectedUserJourney && (
-        <UserJourneyModal
-          journey={selectedUserJourney}
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-        />
-      )}
+      <Separator />
+
+      {/* Cards */}
+      <div className="grid gap-4 md:grid-cols-2">
+        {filtered.map(j => (
+          <CareerCard key={j.id} career={j} onClick={() => openModal(j)} />
+        ))}
+      </div>
+
+      {/* Modal */}
+      <CareerModal career={active} isOpen={isOpen} onClose={closeModal} />
     </div>
   );
-};
-
-export default Index;
+}

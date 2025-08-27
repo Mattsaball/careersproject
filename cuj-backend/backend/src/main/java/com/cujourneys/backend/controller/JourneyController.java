@@ -1,9 +1,17 @@
+// src/main/java/com/cujourneys/backend/controller/JourneyController.java
 package com.cujourneys.backend.controller;
 
-import com.cujourneys.backend.model.Journey;    
-import com.cujourneys.backend.repository.JourneyRepository;
+import com.cujourneys.backend.dto.JourneyRequest;
+import com.cujourneys.backend.dto.JourneyResponse;
+import com.cujourneys.backend.model.IndustryCategory;
+import com.cujourneys.backend.service.JourneyService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -11,21 +19,52 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173")
 public class JourneyController {
 
-    private final JourneyRepository journeyRepository;
+    private final JourneyService journeyService;
 
-    public JourneyController(JourneyRepository journeyRepository) {
-        this.journeyRepository = journeyRepository;
+    public JourneyController(JourneyService journeyService) {
+        this.journeyService = journeyService;
     }
 
+    /**
+     * List journeys with filters (multi-industry), search, pagination, and sorting.
+     * Example:
+     *   GET /api/journeys?industries=TECH&industries=FINANCE&q=intern&page=0&size=20&sort=createdAt,desc
+     */
     @GetMapping
-    public List<Journey> getAllJourneys() {
-        return journeyRepository.findAll();
+    public Page<JourneyResponse> list(
+            @RequestParam(required = false) List<String> industries,
+            @RequestParam(required = false) Integer graduationYear,
+            @RequestParam(required = false) Boolean anonymous,
+            @RequestParam(required = false, name = "q") String query,
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+            Pageable pageable
+    ) {
+        return journeyService.search(industries, graduationYear, anonymous, query, pageable);
     }
 
+    /**
+     * Create a journey (supports multiple industries by name).
+     */
     @PostMapping
-    public Journey createJourney(@RequestBody Journey journey) {
-        System.out.println("Received Journey: " + journey);
-        return journeyRepository.save(journey);
+    public JourneyResponse create(@RequestBody JourneyRequest req) {
+        return journeyService.create(req);
     }
-    
+
+    /**
+     * Update a journey.
+     */
+    @PutMapping("/{id}")
+    public JourneyResponse update(@PathVariable Long id, @RequestBody JourneyRequest req) {
+        return journeyService.update(id, req);
+    }
+
+    /**
+     * List available industry categories for the filter UI.
+     */
+    @GetMapping("/industries")
+    public List<String> industries() {
+        return Arrays.stream(IndustryCategory.values())
+                .map(Enum::name)
+                .toList();
+    }
 }

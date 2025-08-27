@@ -18,14 +18,14 @@ import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
 import RequireAuth from "./components/RequireAuth";
 
-// ⬅️ ensure axios has Authorization from localStorage right away
+// Ensure axios has Authorization from storage before first render
 import { bootstrapAuthFromStorage } from "./api/api";
 bootstrapAuthFromStorage();
 
 const queryClient = new QueryClient();
 
-const AppHeader = () => {
-  const { auth, logout, booting } = useAuth();
+function AppHeader() {
+  const { user, logout, booting } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -47,15 +47,10 @@ const AppHeader = () => {
         </Link>
 
         {/* Avoid header flicker while /auth/me is validating */}
-        {booting ? null : auth ? (
+        {booting ? null : user ? (
           <>
-            <span className="text-sm">
-              Hi, {auth.user?.name ?? auth.user?.email}
-            </span>
-            <button
-              onClick={handleLogout}
-              className="text-red-500 hover:underline"
-            >
+            <span className="text-sm">Hi, {user.name ?? user.email}</span>
+            <button onClick={handleLogout} className="text-red-500 hover:underline">
               Logout
             </button>
           </>
@@ -72,7 +67,7 @@ const AppHeader = () => {
       </div>
     </div>
   );
-};
+}
 
 export default function App() {
   return (
