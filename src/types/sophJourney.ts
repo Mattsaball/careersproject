@@ -5,8 +5,10 @@ export interface SophJourney {
   minor?: string;
   sophSummerJob: string;
   sophSummerCareerType: string;
+  sophSummerHowGot: string;
   freshmanSummerJob: string;
   freshmanSummerCareerType: string;
+  freshmanSummerHowGot: string;
   networkingStrategies: string;
   advice: string;
   hacks: string;
