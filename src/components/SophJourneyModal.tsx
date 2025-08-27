@@ -47,42 +47,49 @@ export const SophJourneyModal = ({ journey, isOpen, onClose }: SophJourneyModalP
               </CardContent>
             </Card>
 
-            {/* Summer Experiences */}
+            {/* Sophomore Summer Experience */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg text-card-foreground">Summer Experiences</CardTitle>
+                <CardTitle className="text-lg text-card-foreground">Sophomore Summer</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <p className="text-sm font-semibold text-card-foreground mb-1">
-                    Sophomore Summer (Current):
-                  </p>
+                  <p className="text-sm font-semibold text-card-foreground mb-2">What They Did:</p>
                   <p className="text-sm text-muted-foreground mb-1">{journey.sophSummerJob}</p>
                   <p className="text-xs text-muted-foreground">({journey.sophSummerCareerType})</p>
                 </div>
-                <div>
-                  <p className="text-sm font-semibold text-card-foreground mb-1">
-                    Freshman Summer:
-                  </p>
-                  <p className="text-sm text-muted-foreground mb-1">{journey.freshmanSummerJob}</p>
-                  <p className="text-xs text-muted-foreground">({journey.freshmanSummerCareerType})</p>
-                </div>
+                {journey.networkingStrategies && (
+                  <div>
+                    <p className="text-sm font-semibold text-card-foreground mb-2">How They Got This Experience:</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {journey.networkingStrategies}
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
-            {/* How They Got These Experiences */}
-            {journey.networkingStrategies && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg text-card-foreground">How They Got These Experiences</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {journey.networkingStrategies}
-                  </p>
-                </CardContent>
-              </Card>
-            )}
+            {/* Freshman Summer Experience */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg text-card-foreground">Freshman Summer</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <p className="text-sm font-semibold text-card-foreground mb-2">What They Did:</p>
+                  <p className="text-sm text-muted-foreground mb-1">{journey.freshmanSummerJob}</p>
+                  <p className="text-xs text-muted-foreground">({journey.freshmanSummerCareerType})</p>
+                </div>
+                {journey.networkingStrategies && (
+                  <div>
+                    <p className="text-sm font-semibold text-card-foreground mb-2">How They Got This Experience:</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {journey.networkingStrategies}
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
             {/* Advice */}
             {journey.advice && (
