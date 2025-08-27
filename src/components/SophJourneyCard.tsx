@@ -16,14 +16,28 @@ export const SophJourneyCard = ({ journey, onClick }: SophJourneyCardProps) => {
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-semibold text-card-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
-              {journey.sophSummerJob || "No summer job shared yet"}
-            </h3>
-            <p className="text-sm text-muted-foreground mb-1">
-              {journey.major} • Class of {journey.graduationYear}
-            </p>
+            {/* Sophomore Summer */}
+            <div className="mb-3">
+              <h3 className="text-lg font-semibold text-card-foreground group-hover:text-primary transition-colors line-clamp-2">
+                {journey.sophSummerJob || "No sophomore summer job shared yet"}
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                Sophomore Summer
+              </p>
+            </div>
+            
+            {/* Freshman Summer */}
+            <div className="mb-2">
+              <h4 className="text-sm font-medium text-card-foreground group-hover:text-primary transition-colors line-clamp-1">
+                {journey.freshmanSummerJob || "No freshman summer job shared yet"}
+              </h4>
+              <p className="text-xs text-muted-foreground">
+                Freshman Summer
+              </p>
+            </div>
+            
             <p className="text-xs text-muted-foreground">
-              {journey.sophSummerCareerType}
+              {journey.major} • Class of {journey.graduationYear}
             </p>
           </div>
           <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-200 flex-shrink-0 ml-4" />
