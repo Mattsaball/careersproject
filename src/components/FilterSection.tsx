@@ -14,23 +14,23 @@ interface FilterSectionProps {
 }
 
   const majorCategories = [
-    "Business & Finance",
-    "Science & Health Sciences", 
-    "Engineering & Math",
+    "Business/Finance",
+    "Science/Health Sciences", 
+    "Engineering/Math",
     "Humanities",
     "Social Sciences",
-    "Arts & Media"
+    "Arts/Media"
   ];
 
   const careerTypeCategories = [
-    "Business / Finance",
-    "Engineering / Tech", 
-    "Healthcare / Life Sciences",
-    "Academia / Graduate School",
-    "Government / Policy / Legal",
-    "Media / Arts / Museums",
-    "Education / Teaching",
-    "Sustainability / Environment"
+    "Business/Finance",
+    "Engineering/Tech", 
+    "Healthcare/Life Sciences",
+    "Academia/Graduate School",
+    "Government/Policy/Legal",
+    "Media/Arts/Museums",
+    "Education/Teaching",
+    "Sustainability/Environment"
   ];
 
 export const FilterSection = ({
