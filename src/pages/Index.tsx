@@ -2,9 +2,13 @@ import { useState, useEffect, useMemo } from "react";
 import { CareerCard } from "@/components/CareerCard";
 import { CareerModal } from "@/components/CareerModal";
 import { UserJourneyModal } from "@/components/UserJourneyModal";
+import { SophJourneyCard } from "@/components/SophJourneyCard";
+import { SophJourneyModal } from "@/components/SophJourneyModal";
 import { FilterSection } from "@/components/FilterSection";
 import { careerJourneys as staticJourneys } from "@/data/careerJourneys";
+import { sophJourneys } from "@/data/sophJourneys";
 import { CareerJourney } from "@/types/career";
+import { SophJourney } from "@/types/sophJourney";
 import { GraduationCap } from "lucide-react";
 
 const Index = () => {
@@ -13,7 +17,9 @@ const Index = () => {
     useState<CareerJourney | null>(null);
   const [selectedUserJourney, setSelectedUserJourney] =
     useState<CareerJourney | null>(null);
+  const [selectedSophJourney, setSelectedSophJourney] = useState<SophJourney | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSophModalOpen, setIsSophModalOpen] = useState(false);
   
   // Filter states
   const [selectedMajors, setSelectedMajors] = useState<string[]>([]);
@@ -67,10 +73,20 @@ const Index = () => {
     setIsModalOpen(true);
   };
 
+  const handleSophJourneyClick = (id: string) => {
+    const journey = sophJourneys.find(j => j.id === id);
+    if (journey) {
+      setSelectedSophJourney(journey);
+      setIsSophModalOpen(true);
+    }
+  };
+
   const handleCloseModal = () => {
     setSelectedStaticCareer(null);
     setSelectedUserJourney(null);
+    setSelectedSophJourney(null);
     setIsModalOpen(false);
+    setIsSophModalOpen(false);
   };
 
   // Major category mapping
@@ -221,14 +237,32 @@ const Index = () => {
           onClearAll={clearAllFilters}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-          {filteredJourneys.map((career) => (
-            <CareerCard
-              key={career.id}
-              career={career}
-              onClick={() => handleCardClick(career.id)}
-            />
-          ))}
+        {/* Alumni Career Journeys Section */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Alumni Career Journeys</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+            {filteredJourneys.map((career) => (
+              <CareerCard
+                key={career.id}
+                career={career}
+                onClick={() => handleCardClick(career.id)}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Sophomore Experiences Section */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Sophomore Experiences (Class of 2027)</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+            {sophJourneys.map((journey) => (
+              <SophJourneyCard
+                key={journey.id}
+                journey={journey}
+                onClick={() => handleSophJourneyClick(journey.id)}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
@@ -247,6 +281,12 @@ const Index = () => {
           onClose={handleCloseModal}
         />
       )}
+
+      <SophJourneyModal
+        journey={selectedSophJourney}
+        isOpen={isSophModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 };
