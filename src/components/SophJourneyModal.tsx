@@ -58,11 +58,11 @@ export const SophJourneyModal = ({ journey, isOpen, onClose }: SophJourneyModalP
                   <p className="text-sm text-muted-foreground mb-1">{journey.sophSummerJob}</p>
                   <p className="text-xs text-muted-foreground">({journey.sophSummerCareerType})</p>
                 </div>
-                {journey.networkingStrategies && (
+                {journey.sophSummerHowGot && (
                   <div>
                     <p className="text-sm font-semibold text-card-foreground mb-2">How They Got This Experience:</p>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      {journey.networkingStrategies}
+                      {journey.sophSummerHowGot}
                     </p>
                   </div>
                 )}
@@ -80,11 +80,11 @@ export const SophJourneyModal = ({ journey, isOpen, onClose }: SophJourneyModalP
                   <p className="text-sm text-muted-foreground mb-1">{journey.freshmanSummerJob}</p>
                   <p className="text-xs text-muted-foreground">({journey.freshmanSummerCareerType})</p>
                 </div>
-                {journey.networkingStrategies && (
+                {journey.freshmanSummerHowGot && (
                   <div>
                     <p className="text-sm font-semibold text-card-foreground mb-2">How They Got This Experience:</p>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      {journey.networkingStrategies}
+                      {journey.freshmanSummerHowGot}
                     </p>
                   </div>
                 )}
