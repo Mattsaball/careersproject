@@ -1,4 +1,4 @@
-package com.cujourneys.backend.auth.dto;
+package com.cujourneys.backend.auth;
 
 import lombok.Data;
 

@@ -1,73 +1,93 @@
 package com.cujourneys.backend.jwt;
 
-import com.cujourneys.backend.model.User;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.cujourneys.backend.model.User;
+
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
-import java.util.function.Function;
 
 @Service
 public class JWTService {
 
-    // TODO: move to config/env
-    private static final String SECRET_KEY = "very_secret_key_change_this_to_something_long_1234567890";
-    private static final long EXPIRATION_MS = 86400000; // 1 day
+  // Prefer to set via application.properties: jwt.secret=<base64-encoded 256-bit key>
+  @Value("${jwt.secret:}")
+  private String SECRET;  // may be empty if not set; we'll guard below
 
-    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+  private static final long EXPIRATION_MS = 86_400_000L; // 1 day
 
-    /** Generate a token for a given user. */
-    public String generateToken(User user) {
-        return Jwts.builder()
-                .setSubject(user.getEmail())          // email is subject
-                .claim("userId", user.getId())        // custom claim
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+  private Key getSignKey() {
+    String secret = (SECRET == null || SECRET.isBlank())
+        ? "Pp5Y0k8o3dQ2zW7r9uT6vB4n1mC5xE7a9sD3fG1hJ4kL8pO2qR6tU0wY2" // dev-only fallback
+        : SECRET;
+
+    byte[] keyBytes;
+    try {
+      // Try base64 first (recommended)
+      keyBytes = Decoders.BASE64.decode(secret);
+    } catch (IllegalArgumentException e) {
+      // Fallback: treat as raw text
+      keyBytes = secret.getBytes(StandardCharsets.UTF_8);
     }
 
-    /** Extract subject (email) from a token. */
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+    if (keyBytes.length < 32) {
+      throw new IllegalStateException(
+          "JWT secret key is too short (< 256 bits). Provide a base64-encoded 32+ byte secret in 'jwt.secret'.");
     }
+    return Keys.hmacShaKeyFor(keyBytes);
+  }
 
-    public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
-    }
+  // Overload for your entity
+  public String generateToken(User user) {
+    return generateToken(user.getEmail(), user.getId());
+  }
 
-    public <T> T extractClaim(String token, Function<Claims, T> resolver) {
-        final Claims claims = parseClaims(token);
-        return resolver.apply(claims);
-    }
+  // Overload for Spring Security principals (optional)
+  public String generateToken(UserDetails user) {
+    return generateToken(user.getUsername(), null);
+  }
 
-    /** Validate token: matches user + not expired. */
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
+  private String generateToken(String subject, Long userId) {
+    var builder = Jwts.builder()
+        .setSubject(subject)
+        .setIssuedAt(new Date())
+        .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS));
+    if (userId != null) builder.claim("userId", userId);
 
-    // add inside JWTService
-    public String extractEmail(String token) {
-        return extractUsername(token);
-    }
+    return builder
+        .signWith(getSignKey(), SignatureAlgorithm.HS256)
+        .compact();
+  }
 
+  public String extractEmail(String token) {
+    return Jwts.parserBuilder()
+        .setSigningKey(getSignKey())
+        .build()
+        .parseClaimsJws(token)
+        .getBody()
+        .getSubject();
+  }
 
-    private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
+  public boolean isTokenValid(String token, UserDetails userDetails) {
+    String email = extractEmail(token);
+    return email.equals(userDetails.getUsername()) && !isExpired(token);
+  }
 
-    private Claims parseClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
+  private boolean isExpired(String token) {
+    Date exp = Jwts.parserBuilder()
+        .setSigningKey(getSignKey())
+        .build()
+        .parseClaimsJws(token)
+        .getBody()
+        .getExpiration();
+    return exp.before(new Date());
+  }
 }

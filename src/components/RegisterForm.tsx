@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import axios from "axios";
 import { useAuth } from "@/hooks/useAuth";
-import { api } from "@/api/api";
+
+const API = (import.meta.env.VITE_API_URL as string) ?? "http://localhost:8080";
 
 export default function RegisterForm() {
-  const { login } = useAuth(); // <-- use login helper
+  const { setAuth } = useAuth();
   const [search] = useSearchParams();
   const next = search.get("next") || "/";
 
@@ -19,25 +21,29 @@ export default function RegisterForm() {
     if (loading) return;
     setLoading(true);
     try {
-      const reg = await api.post("/api/auth/register", {
+      const reg = await axios.post(`${API}/api/auth/register`, {
         name,
         email,
         password,
       });
 
-      // Prefer backend returns { token, user } on register:
+      // prefer: backend returns { token, user }
       const maybeToken = reg.data?.token;
       const maybeUser = reg.data?.user;
       if (maybeToken && maybeUser) {
-        await login(maybeToken, maybeUser);
-        navigate(next, { replace: true });
+        setAuth({ token: maybeToken, user: maybeUser });
+        navigate(next);
         return;
       }
 
-      // Fallback: immediately login
-      const { data } = await api.post("/api/auth/login", { email, password });
-      await login(data.token, data.user);
-      navigate(next, { replace: true });
+      // fallback: immediately login
+      const login = await axios.post(`${API}/api/auth/login`, {
+        email,
+        password,
+      });
+      const { token, user } = login.data;
+      setAuth({ token, user });
+      navigate(next);
     } catch (err: any) {
       if (err?.response?.status === 409) alert("That email is already in use.");
       else alert("Registration failed. Please try again.");
@@ -48,7 +54,7 @@ export default function RegisterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 w/full max-w-sm mx-auto">
+    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm mx-auto">
       <h2 className="text-xl font-bold text-center">Create your account</h2>
       <input
         type="text"

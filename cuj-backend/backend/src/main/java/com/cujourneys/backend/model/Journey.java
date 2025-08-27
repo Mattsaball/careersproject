@@ -1,31 +1,30 @@
-// src/main/java/com/cujourneys/backend/model/Journey.java
 package com.cujourneys.backend.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.List;
 
 @Entity
-@Table(name = "Journey")
-@Getter @Setter @NoArgsConstructor
 public class Journey {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+    private String linkedin;
+
+    @Column(name = "graduation_year")
+    private String graduationYear;
+
+    private boolean anonymous;
+    private String clubs;
+    private String resources;
+    private String missed;
     private String advice;
 
-    // Use wrapper types so nulls are allowed
-    private Boolean anonymous;
+    @ElementCollection
+    private List<String> summers;
 
-    private String clubs;
-
-    @Column(name = "graduation_year")   // DB column is snake_case
-    private Integer graduationYear;      // JSON will be camelCase
-
-    private String linkedin;
-    private String missed;
-    private String name;
-    private String resources;
+    // Getters and Setters
+    // (you can generate these with Lombok later if desired)
 }

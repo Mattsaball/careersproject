@@ -1,4 +1,4 @@
-package com.cujourneys.backend.auth.dto;
+package com.cujourneys.backend.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,5 +7,4 @@ import lombok.Data;
 @AllArgsConstructor
 public class AuthResponse {
     private String token;
-    private UserResponse user;
 }
