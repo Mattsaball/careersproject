@@ -70,6 +70,20 @@ export const SophJourneyModal = ({ journey, isOpen, onClose }: SophJourneyModalP
               </CardContent>
             </Card>
 
+            {/* How They Got These Experiences */}
+            {journey.networkingStrategies && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg text-card-foreground">How They Got These Experiences</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {journey.networkingStrategies}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Advice */}
             {journey.advice && (
               <Card>
@@ -79,20 +93,6 @@ export const SophJourneyModal = ({ journey, isOpen, onClose }: SophJourneyModalP
                 <CardContent>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     {journey.advice}
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Networking Strategies */}
-            {journey.networkingStrategies && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg text-card-foreground">Networking Strategies</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {journey.networkingStrategies}
                   </p>
                 </CardContent>
               </Card>
