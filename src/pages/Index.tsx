@@ -198,6 +198,37 @@ const Index = () => {
     );
   };
 
+  // Helper functions for sophomore journey filtering
+  const sophMajorFilterMatches = (journey: SophJourney, selectedMajors: string[]): boolean => {
+    if (selectedMajors.length === 0) return true;
+    
+    const majorFilter = journey.majorFilter || '';
+    // Split by || to handle multiple categories and clean up whitespace
+    const majorCategories = majorFilter.split('||').map(cat => cat.trim());
+    
+    // Check if any selected major matches any of the journey's major categories
+    return selectedMajors.some(selectedMajor => 
+      majorCategories.some(journeyCategory => 
+        journeyCategory === selectedMajor
+      )
+    );
+  };
+
+  const sophCareerFilterMatches = (journey: SophJourney, selectedCareerTypes: string[]): boolean => {
+    if (selectedCareerTypes.length === 0) return true;
+    
+    const careerFilter = journey.careerFilter || '';
+    // Split by || to handle multiple categories and clean up whitespace
+    const careerCategories = careerFilter.split('||').map(cat => cat.trim());
+    
+    // Check if any selected career type matches any of the journey's career categories
+    return selectedCareerTypes.some(selectedCareer => 
+      careerCategories.some(journeyCategory => 
+        journeyCategory === selectedCareer
+      )
+    );
+  };
+
   // Filtered journeys using OR logic
   const filteredJourneys = useMemo(() => {
     if (selectedMajors.length === 0 && selectedCareerTypes.length === 0 && selectedYears.length === 0) {
@@ -212,6 +243,21 @@ const Index = () => {
       return majorMatch && careerMatch && yearMatch;
     });
   }, [allJourneys, selectedMajors, selectedCareerTypes, selectedYears]);
+
+  // Filtered sophomore journeys
+  const filteredSophJourneys = useMemo(() => {
+    if (selectedMajors.length === 0 && selectedCareerTypes.length === 0 && selectedYears.length === 0) {
+      return sophJourneys;
+    }
+
+    return sophJourneys.filter(journey => {
+      const majorMatch = sophMajorFilterMatches(journey, selectedMajors);
+      const careerMatch = sophCareerFilterMatches(journey, selectedCareerTypes);
+      const yearMatch = selectedYears.length === 0 || selectedYears.includes(journey.graduationYear || '');
+
+      return majorMatch && careerMatch && yearMatch;
+    });
+  }, [selectedMajors, selectedCareerTypes, selectedYears]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -255,7 +301,7 @@ const Index = () => {
         <div className="mb-12">
           <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Sophomore Experiences (Class of 2027)</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-            {sophJourneys.map((journey) => (
+            {filteredSophJourneys.map((journey) => (
               <SophJourneyCard
                 key={journey.id}
                 journey={journey}

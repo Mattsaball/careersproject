@@ -5,6 +5,8 @@ export const sophJourneys: SophJourney[] = (sophData as any[]).map((entry, index
   id: `soph-${index + 1}`,
   major: entry["What is your major(s)?\n(Separate with commas if more than one)"] || "",
   majorType: entry["Major Type "] || "",
+  majorFilter: entry["major filter"] || "",
+  careerFilter: entry["career filter"] || "",
   minor: entry["What is your minor(s)?\n(Leave blank if none)"] || "",
   sophSummerJob: entry["What are you doing professionally this summer?\n(e.g., Business Analyst at Capital One)"] || "",
   sophSummerCareerType: entry["Career type soph summer"] || "",
