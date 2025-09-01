@@ -103,8 +103,25 @@ const Index = () => {
   const [showAlumni, setShowAlumni] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/journeys")
-      .then((res) => res.json())
+    // Load static journeys immediately to avoid latency
+    const staticNormalized = staticJourneys.map((journey) => ({
+      ...journey,
+      id: `static-${journey.id}`,
+    }));
+    setAllJourneys(staticNormalized);
+
+    // Try to fetch backend journeys with a timeout
+    const fetchWithTimeout = (url: string, timeout = 5000) => {
+      return Promise.race([
+        fetch(url),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Timeout')), timeout)
+        )
+      ]);
+    };
+
+    fetchWithTimeout("http://localhost:8080/api/journeys")
+      .then((res: any) => res.json())
       .then((data) => {
         const backendJourneys = data.map((journey: any, index: number) => ({
           id: `backend-${journey.id || index}`,
@@ -120,22 +137,12 @@ const Index = () => {
           anonymous: journey.anonymous ?? true,
         }));
 
-        const staticNormalized = staticJourneys.map((journey) => ({
-          ...journey,
-          id: `static-${journey.id}`, // prefix static ids
-        }));
-
-        setAllJourneys([...staticNormalized, ...backendJourneys]);
+        // Append backend journeys to existing static ones
+        setAllJourneys(prev => [...prev, ...backendJourneys]);
       })
       .catch((err) => {
-        console.error("Failed to fetch backend journeys:", err);
-        console.log("Static journeys fallback:", staticJourneys.length);
-        const staticNormalized = staticJourneys.map((journey) => ({
-          ...journey,
-          id: `static-${journey.id}`,
-        }));
-        console.log("Setting fallback journeys:", staticNormalized.length);
-        setAllJourneys(staticNormalized);
+        console.log("Backend journeys not available, using static data only");
+        // Static data is already loaded, no need to do anything
       });
   }, []);
 
