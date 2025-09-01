@@ -100,7 +100,7 @@ const Index = () => {
   const [selectedYears, setSelectedYears] = useState<string[]>([]);
   
   // Journey type toggle state
-  const [showAlumni, setShowAlumni] = useState(true);
+  const [showAlumni, setShowAlumni] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:8080/api/journeys")
@@ -472,16 +472,6 @@ const Index = () => {
         <div className="flex justify-center mb-8">
           <div className="bg-card border rounded-lg p-1 flex gap-1">
             <button
-              onClick={() => setShowAlumni(true)}
-              className={`px-6 py-3 rounded-md text-sm font-medium transition-all ${
-                showAlumni
-                  ? 'bg-primary text-primary-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-              }`}
-            >
-              Alumni Journeys
-            </button>
-            <button
               onClick={() => setShowAlumni(false)}
               className={`px-6 py-3 rounded-md text-sm font-medium transition-all ${
                 !showAlumni
@@ -490,6 +480,16 @@ const Index = () => {
               }`}
             >
               Current Student Journeys
+            </button>
+            <button
+              onClick={() => setShowAlumni(true)}
+              className={`px-6 py-3 rounded-md text-sm font-medium transition-all ${
+                showAlumni
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+              }`}
+            >
+              Alumni Journeys
             </button>
           </div>
         </div>
