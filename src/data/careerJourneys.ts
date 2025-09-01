@@ -1,26 +1,26 @@
 import { CareerJourney } from "@/types/career";
-import reflectsData from "../../reflects.json";
+import { alumniCards } from "../../populate_cards";
 
-// Dynamically load all entries from reflects.json and add IDs
-export const careerJourneys: CareerJourney[] = (reflectsData as any[]).map((entry, index) => ({
+// Convert AlumniCard instances to CareerJourney format
+export const careerJourneys: CareerJourney[] = alumniCards.map((alumniCard, index) => ({
   id: (index + 1).toString(),
   company: (() => {
-    const pg = entry["Post Grad Plans"] || "";
+    const pg = alumniCard.post_grad_plans || "";
     if (typeof pg === "string") {
       const afterColon = pg.split(":")[1]?.trim();
       return afterColon || "";
     }
     return "";
   })(),
-  industry: entry["Career Filter"] || "",
-  majorFilter: entry["Major Filter"] || "",
-  careerFilter: entry["Career Filter"] || "",
-  graduationYear: "fulltime • Class of 2025",
-  major: entry["What is your Major(s) and Minor(s)?"] || "",
-  postGradPlans: entry["Post Grad Plans"] || "",
-  careerPath: entry["Previous experiences and career path"] || "",
-  freshmanAdvice: entry["What would you have done differently as a freshman or sophomore to better prepare for your career?"] || "",
-  skillsToFocus: entry["Skills to focus on"] || "",
-  shortcuts: entry["Hacks and shortcuts"] || "",
-  additionalAdvice: entry["Additional advice"] || ""
+  industry: alumniCard.career_filter || "",
+  majorFilter: alumniCard.major_filter || "",
+  careerFilter: alumniCard.career_filter || "",
+  graduationYear: `fulltime • Class of ${alumniCard.grad_year}`,
+  major: alumniCard.major || "",
+  postGradPlans: alumniCard.post_grad_plans || "",
+  careerPath: alumniCard.prev_experience || "",
+  freshmanAdvice: alumniCard.advice || "",
+  skillsToFocus: alumniCard.skills_to_focus_on || "",
+  shortcuts: alumniCard.hacks || "",
+  additionalAdvice: alumniCard.additional_advice || ""
 }));
