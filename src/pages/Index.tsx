@@ -53,10 +53,12 @@ const Index = () => {
       })
       .catch((err) => {
         console.error("Failed to fetch backend journeys:", err);
+        console.log("Static journeys fallback:", staticJourneys.length);
         const staticNormalized = staticJourneys.map((journey) => ({
           ...journey,
           id: `static-${journey.id}`,
         }));
+        console.log("Setting fallback journeys:", staticNormalized.length);
         setAllJourneys(staticNormalized);
       });
   }, []);
