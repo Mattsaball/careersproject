@@ -98,6 +98,9 @@ const Index = () => {
   const [selectedMajors, setSelectedMajors] = useState<string[]>([]);
   const [selectedCareerTypes, setSelectedCareerTypes] = useState<string[]>([]);
   const [selectedYears, setSelectedYears] = useState<string[]>([]);
+  
+  // Journey type toggle state
+  const [showAlumni, setShowAlumni] = useState(true);
 
   useEffect(() => {
     fetch("http://localhost:8080/api/journeys")
@@ -465,6 +468,32 @@ const Index = () => {
           </p>
         </div>
 
+        {/* Journey Type Toggle */}
+        <div className="flex justify-center mb-8">
+          <div className="bg-card border rounded-lg p-1 flex gap-1">
+            <button
+              onClick={() => setShowAlumni(true)}
+              className={`px-6 py-3 rounded-md text-sm font-medium transition-all ${
+                showAlumni
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+              }`}
+            >
+              Alumni Journeys
+            </button>
+            <button
+              onClick={() => setShowAlumni(false)}
+              className={`px-6 py-3 rounded-md text-sm font-medium transition-all ${
+                !showAlumni
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+              }`}
+            >
+              Current Student Journeys
+            </button>
+          </div>
+        </div>
+
         <FilterSection
           selectedMajors={selectedMajors}
           selectedCareerTypes={selectedCareerTypes}
@@ -473,33 +502,34 @@ const Index = () => {
           onClearAll={clearAllFilters}
         />
 
-        {/* Alumni Career Journeys Section */}
-        <div className="mb-12">
-          <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Alumni Career Journeys</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-            {filteredJourneys.map((career) => (
-              <CareerCard
-                key={career.id}
-                career={career}
-                onClick={() => handleCardClick(career.id)}
-              />
-            ))}
+        {/* Conditional Journey Sections */}
+        {showAlumni ? (
+          <div className="mb-12">
+            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Alumni Career Journeys</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+              {filteredJourneys.map((career) => (
+                <CareerCard
+                  key={career.id}
+                  career={career}
+                  onClick={() => handleCardClick(career.id)}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-
-        {/* Sophomore Experiences Section */}
-        <div className="mb-12">
-          <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Sophomore Experiences (Class of 2027)</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-            {filteredSophJourneys.map((journey) => (
-              <SophJourneyCard
-                key={journey.id}
-                journey={journey}
-                onClick={() => handleSophJourneyClick(journey.id)}
-              />
-            ))}
+        ) : (
+          <div className="mb-12">
+            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Current Student Journeys (Class of 2027)</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+              {filteredSophJourneys.map((journey) => (
+                <SophJourneyCard
+                  key={journey.id}
+                  journey={journey}
+                  onClick={() => handleSophJourneyClick(journey.id)}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {selectedStaticCareer && (
