@@ -327,6 +327,99 @@ const Index = () => {
     });
   };
 
+  // Helper function to check if soph journey matches filters
+  const sophJourneyMatches = (journey: SophJourney): boolean => {
+    if (selectedMajors.length === 0 && selectedCareerTypes.length === 0) return true;
+    
+    let majorMatch = false;
+    let careerMatch = false;
+    
+    // Check major filter
+    if (selectedMajors.length > 0) {
+      const majorFilter = journey.majorFilter || '';
+      majorMatch = selectedMajors.some(selectedMajor => {
+        if (majorFilter === selectedMajor) return true;
+        
+        const majorLower = majorFilter.toLowerCase();
+        switch (selectedMajor) {
+          case 'Business & Finance':
+            return majorLower.includes('business') || majorLower.includes('finance') || 
+                   majorLower.includes('economics') || majorLower.includes('accounting');
+          case 'Science & Health Sciences':
+            return majorLower.includes('biology') || majorLower.includes('chemistry') || 
+                   majorLower.includes('physics') || majorLower.includes('medicine') || 
+                   majorLower.includes('health') || majorLower.includes('science');
+          case 'Engineering & Math':
+            return majorLower.includes('engineering') || majorLower.includes('computer') || 
+                   majorLower.includes('math') || majorLower.includes('technology');
+          case 'Humanities':
+            return majorLower.includes('history') || majorLower.includes('literature') || 
+                   majorLower.includes('philosophy') || majorLower.includes('language') || 
+                   majorLower.includes('humanities');
+          case 'Social Sciences':
+            return majorLower.includes('psychology') || majorLower.includes('sociology') || 
+                   majorLower.includes('anthropology') || majorLower.includes('political') || 
+                   majorLower.includes('social');
+          case 'Arts & Media':
+            return majorLower.includes('art') || majorLower.includes('music') || 
+                   majorLower.includes('theater') || majorLower.includes('media') || 
+                   majorLower.includes('design');
+          default:
+            return false;
+        }
+      });
+    }
+    
+    // Check career filter
+    if (selectedCareerTypes.length > 0) {
+      const careerFilter = journey.careerFilter || '';
+      careerMatch = selectedCareerTypes.some(selectedCareer => {
+        if (careerFilter === selectedCareer) return true;
+        
+        const careerLower = careerFilter.toLowerCase();
+        switch (selectedCareer) {
+          case 'Business / Finance':
+            return careerLower.includes('business') || careerLower.includes('finance') || 
+                   careerLower.includes('banking') || careerLower.includes('consulting');
+          case 'Engineering / Tech':
+            return careerLower.includes('engineering') || careerLower.includes('tech') || 
+                   careerLower.includes('software') || careerLower.includes('computer');
+          case 'Healthcare / Life Sciences':
+            return careerLower.includes('healthcare') || careerLower.includes('medical') || 
+                   careerLower.includes('life sciences') || careerLower.includes('biology');
+          case 'Academia / Graduate School':
+            return careerLower.includes('academia') || careerLower.includes('graduate') || 
+                   careerLower.includes('research') || careerLower.includes('phd');
+          case 'Government / Policy / Legal':
+            return careerLower.includes('government') || careerLower.includes('policy') || 
+                   careerLower.includes('legal') || careerLower.includes('law');
+          case 'Media / Arts / Museums':
+            return careerLower.includes('media') || careerLower.includes('arts') || 
+                   careerLower.includes('museum') || careerLower.includes('creative');
+          case 'Education / Teaching':
+            return careerLower.includes('education') || careerLower.includes('teaching') || 
+                   careerLower.includes('teacher');
+          case 'Sustainability / Environment':
+            return careerLower.includes('sustainability') || careerLower.includes('environment') || 
+                   careerLower.includes('climate');
+          default:
+            return false;
+        }
+      });
+    }
+    
+    // Use OR logic: if either major or career filters are selected and match, include the journey
+    if (selectedMajors.length > 0 && selectedCareerTypes.length > 0) {
+      return majorMatch || careerMatch;
+    } else if (selectedMajors.length > 0) {
+      return majorMatch;
+    } else if (selectedCareerTypes.length > 0) {
+      return careerMatch;
+    }
+    
+    return true;
+  };
+
   // Filtered journeys using OR logic
   const filteredJourneys = useMemo(() => {
     if (selectedMajors.length === 0 && selectedCareerTypes.length === 0 && selectedYears.length === 0) {
@@ -338,9 +431,23 @@ const Index = () => {
       const careerMatch = careerFilterMatches(journey, selectedCareerTypes);
       const yearMatch = selectedYears.length === 0 || selectedYears.includes(journey.graduationYear || '');
 
-      return majorMatch && careerMatch && yearMatch;
+      // Use OR logic for major and career filters, AND for year filter
+      if (selectedMajors.length > 0 && selectedCareerTypes.length > 0) {
+        return (majorMatch || careerMatch) && yearMatch;
+      } else if (selectedMajors.length > 0) {
+        return majorMatch && yearMatch;
+      } else if (selectedCareerTypes.length > 0) {
+        return careerMatch && yearMatch;
+      }
+      
+      return yearMatch;
     });
   }, [allJourneys, selectedMajors, selectedCareerTypes, selectedYears]);
+
+  // Filtered sophomore journeys
+  const filteredSophJourneys = useMemo(() => {
+    return sophJourneys.filter(sophJourneyMatches);
+  }, [sophJourneys, selectedMajors, selectedCareerTypes]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -384,7 +491,7 @@ const Index = () => {
         <div className="mb-12">
           <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Sophomore Experiences (Class of 2027)</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-            {sophJourneys.map((journey) => (
+            {filteredSophJourneys.map((journey) => (
               <SophJourneyCard
                 key={journey.id}
                 journey={journey}
