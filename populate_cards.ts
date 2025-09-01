@@ -27,19 +27,40 @@ function mapSophJsonToStudentCardProps(entry: any): StudentCardProps {
 
 // Mapping function for alumniData JSON to AlumniCardProps
 function mapAlumniJsonToAlumniCardProps(entry: any): AlumniCardProps {
+    const gradRaw = entry["Grad Year"] ?? entry["Grad Year "] ?? entry["Graduation Year"] ?? "";
+    const gradYear = typeof gradRaw === "string" ? parseInt(gradRaw) : gradRaw;
+
+    const postGrad = entry["What are your post-graduation plans?\n(e.g., Full-time at Google, Grad School at MIT, etc.)"]
+        ?? entry["Post Grad Plans "]
+        ?? entry["Post Grad Plans"]
+        ?? "";
+
+    const skills = entry["What skills do you wish you had focused on more in college to prepare for your current role?"]
+        ?? entry["Skills to focus on"]
+        ?? "";
+
+    const prevExp = entry["What previous experiences (internships, research, etc.) best prepared you for your current role?"]
+        ?? entry["Previous experiences and career path"]
+        ?? "";
+
+    const advice = entry["If you could talk to your freshman or sophomore self, what would you tell them to focus on to get to where you are now (or where you're headed)? "]
+        ?? entry["What would you have done differently as a freshman or sophomore to better prepare for your career?"]
+        ?? entry["Advice"]
+        ?? "";
+
     return {
         major: entry["What is your major(s)?\n(Separate with commas if more than one)"] || "",
         career_filter: entry["CareerFilter"] || "",
         major_filter: entry["MajorFilter"] || "",
         networking_strats: entry["What specific networking strategies have actually worked for you?\nCold emailing? Coffee chats? LinkedIn? Tell us what got real results.  "] || "",
-        hacks: entry["Hacks and shortcuts "] || "",
+        hacks: entry["Hacks and shortcuts "] ?? entry["Hacks and shortcuts"] ?? "",
         additional_advice: entry["Is there anything else you’d like to share that this survey didn’t cover (advice, reflections, or insights)?"] || "",
         class_year: entry["Class"] || "",
-        grad_year: typeof entry["Grad Year"] === "string" ? parseInt(entry["Grad Year"]) : entry["Grad Year"],
-        advice: entry["If you could talk to your freshman or sophomore self, what would you tell them to focus on to get to where you are now (or where you're headed)? "] || "",
-        post_grad_plans: entry["What are your post-graduation plans?\n(e.g., Full-time at Google, Grad School at MIT, etc.)"] || "",
-        skills_to_focus_on: entry["What skills do you wish you had focused on more in college to prepare for your current role?"] || "",
-        prev_experience: entry["What previous experiences (internships, research, etc.) best prepared you for your current role?"] || "",
+        grad_year: gradYear,
+        advice,
+        post_grad_plans: postGrad,
+        skills_to_focus_on: skills,
+        prev_experience: prevExp,
     };
 }
 
