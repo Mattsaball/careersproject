@@ -27,7 +27,7 @@ const AppHeader = () => {
       <Link to="/">
         <h1 className="text-xl font-bold">CU Journeys</h1>
       </Link>
-      <div className="flex gap-4 items-center">
+      {/* <div className="flex gap-4 items-center">
         <Link to="/contribute">
           <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
             Contribute
@@ -55,7 +55,7 @@ const AppHeader = () => {
             </Link>
           </>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };
