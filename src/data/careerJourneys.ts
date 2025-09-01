@@ -25,5 +25,7 @@ export const careerJourneys: CareerJourney[] = alumniCards.map((alumniCard, inde
   freshmanAdvice: alumniCard.advice || "",
   skillsToFocus: alumniCard.skills_to_focus_on || "",
   shortcuts: alumniCard.hacks || "",
-  additionalAdvice: alumniCard.additional_advice || ""
+  additionalAdvice: alumniCard.additional_advice || "",
+  networkingStrategies: alumniCard.networking_strats || "",
+  prevExperience: alumniCard.prev_experience || ""
 }));

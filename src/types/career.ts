@@ -12,4 +12,6 @@ export interface CareerJourney {
   skillsToFocus: string;
   shortcuts: string;
   additionalAdvice: string;
+  networkingStrategies?: string;
+  prevExperience?: string;
 }

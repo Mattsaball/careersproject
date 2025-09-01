@@ -40,7 +40,7 @@ export const CareerModal = ({ career, isOpen, onClose }: CareerModalProps) => {
             {career.careerPath && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Career Path</CardTitle>
+                  <CardTitle className="text-lg">Previous Experience</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
@@ -50,10 +50,23 @@ export const CareerModal = ({ career, isOpen, onClose }: CareerModalProps) => {
               </Card>
             )}
 
+            {career.networkingStrategies && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Networking Strategies</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                    {career.networkingStrategies}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+
             {career.freshmanAdvice && career.freshmanAdvice !== "NA" && career.freshmanAdvice !== "na" && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Freshman Advice</CardTitle>
+                  <CardTitle className="text-lg">Advice</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
