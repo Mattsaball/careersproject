@@ -12,10 +12,10 @@ All colors MUST be HSL.
     --background: 0 0% 8%;
     --foreground: 0 0% 95%;
 
-    --card: 0 0% 10%;
+    --card: 218 15% 12%;
     --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 12%;
+    --popover: 218 12% 14%;
     --popover-foreground: 0 0% 95%;
 
     /* Premium blue accent - sophisticated and modern */
@@ -23,13 +23,13 @@ All colors MUST be HSL.
     --primary-foreground: 0 0% 100%;
     --primary-glow: 214 100% 70%;
 
-    --secondary: 0 0% 15%;
+    --secondary: 218 10% 17%;
     --secondary-foreground: 0 0% 85%;
 
-    --muted: 0 0% 18%;
+    --muted: 218 8% 20%;
     --muted-foreground: 0 0% 60%;
 
-    --accent: 0 0% 20%;
+    --accent: 218 20% 22%;
     --accent-foreground: 214 100% 60%;
 
     --destructive: 0 75% 55%;
@@ -42,10 +42,10 @@ All colors MUST be HSL.
     --success: 120 60% 50%;
     --success-foreground: 0 0% 98%;
 
-    /* Premium gradients with subtle sophistication */
+    /* Premium gradients with subtle blue sophistication */
     --gradient-primary: linear-gradient(135deg, hsl(214 100% 60%), hsl(214 100% 70%));
-    --gradient-card: linear-gradient(135deg, hsl(0 0% 10%), hsl(0 0% 12%));
-    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 8%), hsl(0 0% 10%));
+    --gradient-card: linear-gradient(135deg, hsl(218 15% 12%), hsl(218 20% 22%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 8%), hsl(218 8% 10%));
     
     /* Elegant shadows with premium blue tint */
     --shadow-card: 0 4px 24px -2px hsl(0 0% 0% / 0.4);
