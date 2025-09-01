@@ -241,119 +241,86 @@ const Index = () => {
     setSelectedYears([]);
   };
 
-  // Helper function to check if major filter matches (expansive matching)
+  // Helper function to check if major filter matches
   const majorFilterMatches = (journey: CareerJourney, selectedMajors: string[]): boolean => {
     if (selectedMajors.length === 0) return true;
     
-    const majorFilter = (journey.majorFilter || '').toLowerCase();
-    const major = (journey.major || '').toLowerCase();
+    const majorFilter = journey.majorFilter || '';
     
-    // Check if the journey matches any of the selected major categories
+    // Check if the journey's major filter contains any of the selected major categories
     return selectedMajors.some(selectedMajor => {
+      // Direct match
+      if (majorFilter === selectedMajor) return true;
+      
+      // Category-based matching
+      const majorLower = majorFilter.toLowerCase();
       switch (selectedMajor) {
         case 'Business & Finance':
-          return majorFilter.includes('business') || majorFilter.includes('finance') || 
-                 majorFilter.includes('economics') || majorFilter.includes('accounting') ||
-                 majorFilter.includes('marketing') || majorFilter.includes('management') ||
-                 major.includes('business') || major.includes('finance') || 
-                 major.includes('economics') || major.includes('accounting');
+          return majorLower.includes('business') || majorLower.includes('finance') || 
+                 majorLower.includes('economics') || majorLower.includes('accounting');
         case 'Science & Health Sciences':
-          return majorFilter.includes('biology') || majorFilter.includes('chemistry') || 
-                 majorFilter.includes('physics') || majorFilter.includes('medicine') || 
-                 majorFilter.includes('health') || majorFilter.includes('science') ||
-                 majorFilter.includes('pre-med') || majorFilter.includes('biochem') ||
-                 major.includes('biology') || major.includes('chemistry') || 
-                 major.includes('physics') || major.includes('science');
+          return majorLower.includes('biology') || majorLower.includes('chemistry') || 
+                 majorLower.includes('physics') || majorLower.includes('medicine') || 
+                 majorLower.includes('health') || majorLower.includes('science');
         case 'Engineering & Math':
-          return majorFilter.includes('engineering') || majorFilter.includes('computer') || 
-                 majorFilter.includes('math') || majorFilter.includes('technology') ||
-                 majorFilter.includes('cs') || majorFilter.includes('stem') ||
-                 major.includes('engineering') || major.includes('computer') || 
-                 major.includes('math') || major.includes('cs');
+          return majorLower.includes('engineering') || majorLower.includes('computer') || 
+                 majorLower.includes('math') || majorLower.includes('technology');
         case 'Humanities':
-          return majorFilter.includes('history') || majorFilter.includes('literature') || 
-                 majorFilter.includes('philosophy') || majorFilter.includes('language') || 
-                 majorFilter.includes('humanities') || majorFilter.includes('english') ||
-                 majorFilter.includes('comparative') || majorFilter.includes('classics') ||
-                 major.includes('history') || major.includes('english') || 
-                 major.includes('philosophy') || major.includes('literature');
+          return majorLower.includes('history') || majorLower.includes('literature') || 
+                 majorLower.includes('philosophy') || majorLower.includes('language') || 
+                 majorLower.includes('humanities');
         case 'Social Sciences':
-          return majorFilter.includes('psychology') || majorFilter.includes('sociology') || 
-                 majorFilter.includes('anthropology') || majorFilter.includes('political') || 
-                 majorFilter.includes('social') || majorFilter.includes('international') ||
-                 majorFilter.includes('relations') || majorFilter.includes('studies') ||
-                 major.includes('psychology') || major.includes('political') || 
-                 major.includes('sociology') || major.includes('anthropology');
+          return majorLower.includes('psychology') || majorLower.includes('sociology') || 
+                 majorLower.includes('anthropology') || majorLower.includes('political') || 
+                 majorLower.includes('social');
         case 'Arts & Media':
-          return majorFilter.includes('art') || majorFilter.includes('music') || 
-                 majorFilter.includes('theater') || majorFilter.includes('media') || 
-                 majorFilter.includes('design') || majorFilter.includes('film') ||
-                 majorFilter.includes('creative') || majorFilter.includes('visual') ||
-                 major.includes('art') || major.includes('music') || 
-                 major.includes('film') || major.includes('design');
+          return majorLower.includes('art') || majorLower.includes('music') || 
+                 majorLower.includes('theater') || majorLower.includes('media') || 
+                 majorLower.includes('design');
         default:
           return false;
       }
     });
   };
 
-  // Helper function to check if career filter matches (expansive matching)
+  // Helper function to check if career filter matches
   const careerFilterMatches = (journey: CareerJourney, selectedCareerTypes: string[]): boolean => {
     if (selectedCareerTypes.length === 0) return true;
     
-    const careerFilter = (journey.careerFilter || '').toLowerCase();
-    const postGradPlans = (journey.postGradPlans || '').toLowerCase();
+    const careerFilter = journey.careerFilter || '';
     
-    // Check if the journey matches any of the selected career categories
+    // Check if the journey's career filter contains any of the selected career categories
     return selectedCareerTypes.some(selectedCareer => {
+      // Direct match
+      if (careerFilter === selectedCareer) return true;
+      
+      // Category-based matching
+      const careerLower = careerFilter.toLowerCase();
       switch (selectedCareer) {
         case 'Business / Finance':
-          return careerFilter.includes('business') || careerFilter.includes('finance') || 
-                 careerFilter.includes('banking') || careerFilter.includes('consulting') ||
-                 careerFilter.includes('investment') || careerFilter.includes('analyst') ||
-                 postGradPlans.includes('business') || postGradPlans.includes('finance') ||
-                 postGradPlans.includes('consulting') || postGradPlans.includes('banking');
+          return careerLower.includes('business') || careerLower.includes('finance') || 
+                 careerLower.includes('banking') || careerLower.includes('consulting');
         case 'Engineering / Tech':
-          return careerFilter.includes('engineering') || careerFilter.includes('tech') || 
-                 careerFilter.includes('software') || careerFilter.includes('computer') ||
-                 careerFilter.includes('data') || careerFilter.includes('developer') ||
-                 postGradPlans.includes('tech') || postGradPlans.includes('engineering') ||
-                 postGradPlans.includes('software') || postGradPlans.includes('google') ||
-                 postGradPlans.includes('microsoft') || postGradPlans.includes('amazon');
+          return careerLower.includes('engineering') || careerLower.includes('tech') || 
+                 careerLower.includes('software') || careerLower.includes('computer');
         case 'Healthcare / Life Sciences':
-          return careerFilter.includes('healthcare') || careerFilter.includes('medical') || 
-                 careerFilter.includes('life sciences') || careerFilter.includes('biology') ||
-                 careerFilter.includes('pharma') || careerFilter.includes('biotech') ||
-                 postGradPlans.includes('medical') || postGradPlans.includes('healthcare') ||
-                 postGradPlans.includes('hospital') || postGradPlans.includes('med school');
+          return careerLower.includes('healthcare') || careerLower.includes('medical') || 
+                 careerLower.includes('life sciences') || careerLower.includes('biology');
         case 'Academia / Graduate School':
-          return careerFilter.includes('academia') || careerFilter.includes('graduate') || 
-                 careerFilter.includes('research') || careerFilter.includes('phd') ||
-                 careerFilter.includes('grad school') || careerFilter.includes('university') ||
-                 postGradPlans.includes('grad school') || postGradPlans.includes('phd') ||
-                 postGradPlans.includes('research') || postGradPlans.includes('university');
+          return careerLower.includes('academia') || careerLower.includes('graduate') || 
+                 careerLower.includes('research') || careerLower.includes('phd');
         case 'Government / Policy / Legal':
-          return careerFilter.includes('government') || careerFilter.includes('policy') || 
-                 careerFilter.includes('legal') || careerFilter.includes('law') ||
-                 careerFilter.includes('public') || careerFilter.includes('federal') ||
-                 postGradPlans.includes('government') || postGradPlans.includes('law school') ||
-                 postGradPlans.includes('policy') || postGradPlans.includes('legal');
+          return careerLower.includes('government') || careerLower.includes('policy') || 
+                 careerLower.includes('legal') || careerLower.includes('law');
         case 'Media / Arts / Museums':
-          return careerFilter.includes('media') || careerFilter.includes('arts') || 
-                 careerFilter.includes('museum') || careerFilter.includes('creative') ||
-                 careerFilter.includes('journalism') || careerFilter.includes('entertainment') ||
-                 postGradPlans.includes('media') || postGradPlans.includes('museum') ||
-                 postGradPlans.includes('arts') || postGradPlans.includes('creative');
+          return careerLower.includes('media') || careerLower.includes('arts') || 
+                 careerLower.includes('museum') || careerLower.includes('creative');
         case 'Education / Teaching':
-          return careerFilter.includes('education') || careerFilter.includes('teaching') || 
-                 careerFilter.includes('teacher') || careerFilter.includes('school') ||
-                 postGradPlans.includes('teaching') || postGradPlans.includes('education') ||
-                 postGradPlans.includes('teacher') || postGradPlans.includes('school');
+          return careerLower.includes('education') || careerLower.includes('teaching') || 
+                 careerLower.includes('teacher');
         case 'Sustainability / Environment':
-          return careerFilter.includes('sustainability') || careerFilter.includes('environment') || 
-                 careerFilter.includes('climate') || careerFilter.includes('green') ||
-                 careerFilter.includes('renewable') || careerFilter.includes('conservation') ||
-                 postGradPlans.includes('sustainability') || postGradPlans.includes('environment');
+          return careerLower.includes('sustainability') || careerLower.includes('environment') || 
+                 careerLower.includes('climate');
         default:
           return false;
       }
