@@ -12,7 +12,7 @@ function mapSophJsonToStudentCardProps(entry: any): StudentCardProps {
         major_filter: entry["MajorFilter"] || "",
         networking_strats: entry["What specific networking strategies have actually worked for you?\nCold emailing? Coffee chats? LinkedIn? Tell us what got real results.  "] || "",
         hacks: entry["Hacks and shortcuts "] || "",
-        additional_advice: entry["Is there anything else you’d like to share that this survey didn’t cover (advice, reflections, or insights)?"] || "",
+        additional_advice: entry["Is there anything else you'd like to share that this survey didn't cover (advice, reflections, or insights)?"] || "",
         class_year: entry["Class"] || "",
         grad_year: typeof entry["Grad Year"] === "string" ? parseInt(entry["Grad Year"]) : entry["Grad Year"],
         advice: entry["If you could talk to your freshman or sophomore self, what would you tell them to focus on to get to where you are now (or where you're headed)? "] || "",
@@ -35,16 +35,16 @@ function mapAlumniJsonToAlumniCardProps(entry: any): AlumniCardProps {
         ?? entry["Post Grad Plans"]
         ?? "";
 
-    const skills = entry["What skills do you wish you had focused on more in college to prepare for your current role?"]
+    const skills = entry["Skills to focus on "] 
         ?? entry["Skills to focus on"]
         ?? "";
 
-    const prevExp = entry["What previous experiences (internships, research, etc.) best prepared you for your current role?"]
+    const prevExp = entry["Previous experiences and career path "]
         ?? entry["Previous experiences and career path"]
         ?? "";
 
     const advice = entry["If you could talk to your freshman or sophomore self, what would you tell them to focus on to get to where you are now (or where you're headed)? "]
-        ?? entry["What would you have done differently as a freshman or sophomore to better prepare for your career?"]
+        ?? entry["What would you have done differently as a freshman or sophomore to better prepare for your career?  "]
         ?? entry["Advice"]
         ?? "";
 
@@ -52,9 +52,9 @@ function mapAlumniJsonToAlumniCardProps(entry: any): AlumniCardProps {
         major: entry["What is your major(s)?\n(Separate with commas if more than one)"] || "",
         career_filter: entry["CareerFilter"] || "",
         major_filter: entry["MajorFilter"] || "",
-        networking_strats: entry["What specific networking strategies have actually worked for you?\nCold emailing? Coffee chats? LinkedIn? Tell us what got real results.  "] || "",
+        networking_strats: entry["Networking strategies "] || "",
         hacks: entry["Hacks and shortcuts "] ?? entry["Hacks and shortcuts"] ?? "",
-        additional_advice: entry["Is there anything else you’d like to share that this survey didn’t cover (advice, reflections, or insights)?"] || "",
+        additional_advice: entry["Additional advice "] || "",
         class_year: entry["Class"] || "",
         grad_year: gradYear,
         advice,
