@@ -5,11 +5,56 @@ import { UserJourneyModal } from "@/components/UserJourneyModal";
 import { SophJourneyCard } from "@/components/SophJourneyCard";
 import { SophJourneyModal } from "@/components/SophJourneyModal";
 import { FilterSection } from "@/components/FilterSection";
-import { careerJourneys as staticJourneys } from "@/data/careerJourneys";
-import { sophJourneys } from "@/data/sophJourneys";
+import { alumniCards, studentCards } from "../../populate_cards";
 import { CareerJourney } from "@/types/career";
 import { SophJourney } from "@/types/sophJourney";
 import { GraduationCap } from "lucide-react";
+
+// Convert AlumniCard instances to CareerJourney format
+const staticJourneys: CareerJourney[] = alumniCards.map((alumniCard, index) => ({
+  id: (index + 1).toString(),
+  company: (() => {
+    const pg = alumniCard.post_grad_plans || "";
+    if (typeof pg === "string") {
+      const afterColon = pg.split(":")[1]?.trim();
+      return afterColon || "";
+    }
+    return "";
+  })(),
+  industry: alumniCard.career_filter || "",
+  majorFilter: alumniCard.major_filter || "",
+  careerFilter: alumniCard.career_filter || "",
+  graduationYear: `fulltime • Class of ${alumniCard.grad_year}`,
+  major: alumniCard.major || "",
+  postGradPlans: alumniCard.post_grad_plans || "",
+  careerPath: alumniCard.prev_experience || "",
+  freshmanAdvice: alumniCard.advice || "",
+  skillsToFocus: alumniCard.skills_to_focus_on || "",
+  shortcuts: alumniCard.hacks || "",
+  additionalAdvice: alumniCard.additional_advice || "",
+  networkingStrategies: alumniCard.networking_strats || "",
+  prevExperience: alumniCard.prev_experience || ""
+}));
+
+// Convert StudentCard instances to SophJourney format
+const sophJourneys: SophJourney[] = studentCards.map((studentCard, index) => ({
+  id: `soph-${index + 1}`,
+  major: studentCard.major || "",
+  majorType: studentCard.major_filter || "",
+  minor: "", // Not available in StudentCard, keeping empty
+  majorFilter: studentCard.major_filter || "",
+  careerFilter: studentCard.career_filter || "",
+  sophSummerJob: studentCard.soph_summer || "",
+  sophSummerCareerType: studentCard.soph_career_type || "",
+  sophSummerHowGot: studentCard.soph_how_got || "",
+  freshmanSummerJob: studentCard.fresh_summer || "",
+  freshmanSummerCareerType: studentCard.fresh_career_type || "",
+  freshmanSummerHowGot: studentCard.fresh_how_got || "",
+  networkingStrategies: studentCard.networking_strats || "",
+  advice: studentCard.advice || "",
+  hacks: studentCard.hacks || "",
+  graduationYear: "2027"
+}));
 
 const Index = () => {
   const [allJourneys, setAllJourneys] = useState<CareerJourney[]>([]);
