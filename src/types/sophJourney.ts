@@ -3,6 +3,8 @@ export interface SophJourney {
   major: string;
   majorType: string;
   minor?: string;
+  majorFilter?: string;
+  careerFilter?: string;
   sophSummerJob: string;
   sophSummerCareerType: string;
   sophSummerHowGot: string;
