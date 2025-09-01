@@ -9,7 +9,7 @@
  * @property {number} class The student's class year.
  * @property {string} academic_year The student's academic year.
  */
-interface CareerCard {
+export interface CareerCard {
     major: string;
     career_filter: string;
     major_filter: string;
@@ -22,7 +22,7 @@ interface CareerCard {
 }
 
 // Interface that creates the properties for the student card not in career card
-interface StudentCardProps extends CareerCard {
+export interface StudentCardProps extends CareerCard {
     soph_summer: string;
     fresh_summer: string;
     soph_career_type: string;
@@ -32,7 +32,7 @@ interface StudentCardProps extends CareerCard {
 }
 
 // Class that holds all student card properties
-class StudentCard implements StudentCardProps {
+export class StudentCard implements StudentCardProps {
     // Use definite assignment assertion for all properties
     major!: string;
     career_filter!: string;
@@ -55,14 +55,14 @@ class StudentCard implements StudentCardProps {
     }
 }
 
-interface AlumniCardProps extends CareerCard {
+export interface AlumniCardProps extends CareerCard {
     post_grad_plans: string;
     skills_to_focus_on: string;
     prev_experience: string;
 
 }
 
-class AlumniCard implements AlumniCardProps {
+export class AlumniCard implements AlumniCardProps {
     major!: string;
     career_filter!: string;
     major_filter!: string;
