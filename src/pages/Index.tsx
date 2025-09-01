@@ -11,30 +11,58 @@ import { SophJourney } from "@/types/sophJourney";
 import { GraduationCap } from "lucide-react";
 
 // Convert AlumniCard instances to CareerJourney format
-const staticJourneys: CareerJourney[] = alumniCards.map((alumniCard, index) => ({
-  id: (index + 1).toString(),
-  company: (() => {
-    const pg = alumniCard.post_grad_plans || "";
-    if (typeof pg === "string") {
-      const afterColon = pg.split(":")[1]?.trim();
-      return afterColon || "";
-    }
-    return "";
-  })(),
-  industry: alumniCard.career_filter || "",
-  majorFilter: alumniCard.major_filter || "",
-  careerFilter: alumniCard.career_filter || "",
-  graduationYear: `fulltime • Class of ${alumniCard.grad_year}`,
-  major: alumniCard.major || "",
-  postGradPlans: alumniCard.post_grad_plans || "",
-  careerPath: alumniCard.prev_experience || "",
-  freshmanAdvice: alumniCard.advice || "",
-  skillsToFocus: alumniCard.skills_to_focus_on || "",
-  shortcuts: alumniCard.hacks || "",
-  additionalAdvice: alumniCard.additional_advice || "",
-  networkingStrategies: alumniCard.networking_strats || "",
-  prevExperience: alumniCard.prev_experience || ""
-}));
+const staticJourneys: CareerJourney[] = alumniCards.map((alumniCard, index) => {
+  const journey = {
+    id: (index + 1).toString(),
+    company: (() => {
+      const pg = alumniCard.post_grad_plans || "";
+      if (typeof pg === "string") {
+        const afterColon = pg.split(":")[1]?.trim();
+        return afterColon || "";
+      }
+      return "";
+    })(),
+    industry: alumniCard.career_filter || "",
+    majorFilter: alumniCard.major_filter || "",
+    careerFilter: alumniCard.career_filter || "",
+    graduationYear: `fulltime • Class of ${alumniCard.grad_year}`,
+    major: alumniCard.major || "",
+    postGradPlans: alumniCard.post_grad_plans || "",
+    careerPath: alumniCard.prev_experience || "",
+    freshmanAdvice: alumniCard.advice || "",
+    skillsToFocus: alumniCard.skills_to_focus_on || "",
+    shortcuts: alumniCard.hacks || "",
+    additionalAdvice: alumniCard.additional_advice || "",
+    networkingStrategies: alumniCard.networking_strats || "",
+    prevExperience: alumniCard.prev_experience || ""
+  };
+  
+  // Debug the first few journeys
+  if (index < 3) {
+    console.log(`Journey ${index + 1}:`, {
+      postGradPlans: journey.postGradPlans,
+      major: journey.major,
+      networkingStrategies: journey.networkingStrategies,
+      freshmanAdvice: journey.freshmanAdvice,
+      skillsToFocus: journey.skillsToFocus,
+      shortcuts: journey.shortcuts,
+      additionalAdvice: journey.additionalAdvice,
+      prevExperience: journey.prevExperience
+    });
+    console.log(`Alumni card ${index + 1} raw data:`, {
+      post_grad_plans: alumniCard.post_grad_plans,
+      major: alumniCard.major,
+      networking_strats: alumniCard.networking_strats,
+      advice: alumniCard.advice,
+      skills_to_focus_on: alumniCard.skills_to_focus_on,
+      hacks: alumniCard.hacks,
+      additional_advice: alumniCard.additional_advice,
+      prev_experience: alumniCard.prev_experience
+    });
+  }
+  
+  return journey;
+});
 
 // Convert StudentCard instances to SophJourney format
 const sophJourneys: SophJourney[] = studentCards.map((studentCard, index) => ({
