@@ -23,9 +23,9 @@ const AppHeader = () => {
   };
 
   return (
-    <div className="flex justify-between items-center p-4 bg-white shadow-sm">
+    <div className="flex justify-between items-center p-4 bg-black shadow-sm">
       <Link to="/">
-        <h1 className="text-xl font-bold">CU Journeys</h1>
+        <h1 className="text-xl font-bold text-white">CU Journeys</h1>
       </Link>
       {/* <div className="flex gap-4 items-center">
         <Link to="/contribute">
