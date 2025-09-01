@@ -9,6 +9,7 @@ import { careerJourneys as staticJourneys } from "@/data/careerJourneys";
 import { sophJourneys } from "@/data/sophJourneys";
 import { CareerJourney } from "@/types/career";
 import { SophJourney } from "@/types/sophJourney";
+import { GraduationCap } from "lucide-react";
 
 const Index = () => {
   const [allJourneys, setAllJourneys] = useState<CareerJourney[]>([]);
@@ -214,7 +215,20 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 pt-4 pb-8">
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <GraduationCap className="h-8 w-8 text-primary" />
+            <h1 className="text-4xl font-bold text-foreground">
+              Career Journey Reflections
+            </h1>
+          </div>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Explore inspiring career paths and learn from real experiences
+            across different industries and fields.
+          </p>
+        </div>
+
         <FilterSection
           selectedMajors={selectedMajors}
           selectedCareerTypes={selectedCareerTypes}
