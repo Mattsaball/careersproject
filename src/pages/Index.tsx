@@ -466,12 +466,11 @@ const Index = () => {
           <div className="flex items-center justify-center gap-3 mb-4">
             <GraduationCap className="h-8 w-8 text-primary" />
             <h1 className="text-4xl font-bold text-foreground">
-              Career Journey Reflections
+               Pareto Journeys
             </h1>
           </div>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Explore inspiring career paths and learn from real experiences
-            across different industries and fields.
+            Study The Paths Of Others To Shape Your Future
           </p>
         </div>
 
@@ -525,7 +524,7 @@ const Index = () => {
           </div>
         ) : (
           <div className="mb-12">
-            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Current Student Journeys (Class of 2027)</h3>
+            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Current Student Journeys </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
               {filteredSophJourneys.map((journey) => (
                 <SophJourneyCard
