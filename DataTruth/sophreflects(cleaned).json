@@ -1,7 +1,6 @@
 [
   {
     "Timestamp": 45874.7954815625,
-    "What is your UNI?\n(e.g., arc5331)": "pvp2111",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Computer Science",
@@ -19,7 +18,6 @@
   },
   {
     "Timestamp": 45874.80080525463,
-    "What is your UNI?\n(e.g., arc5331)": "Arka Nath",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Mechanical Engineering, Aerospace Engineering",
@@ -38,7 +36,6 @@
   },
   {
     "Timestamp": 45874.83777239583,
-    "What is your UNI?\n(e.g., arc5331)": "dk3336",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Computer Science",
@@ -56,7 +53,6 @@
   },
   {
     "Timestamp": 45874.83784732639,
-    "What is your UNI?\n(e.g., arc5331)": "qx2247",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Electrical Engineering",
@@ -74,7 +70,6 @@
   },
   {
     "Timestamp": 45874.85301739583,
-    "What is your UNI?\n(e.g., arc5331)": "aks2288",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Mechanical Engineering",
@@ -92,7 +87,6 @@
   },
   {
     "Timestamp": 45874.860614212965,
-    "What is your UNI?\n(e.g., arc5331)": "sr4101",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Mechanical Engineering",
@@ -110,7 +104,6 @@
   },
   {
     "Timestamp": 45874.86901577546,
-    "What is your UNI?\n(e.g., arc5331)": "jl6678",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Economics-Philosophy",
@@ -128,7 +121,6 @@
   },
   {
     "Timestamp": 45874.919951539356,
-    "What is your UNI?\n(e.g., arc5331)": "ajc2335",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Biology",
@@ -145,14 +137,13 @@
   },
   {
     "Timestamp": 45874.940018113426,
-    "What is your UNI?\n(e.g., arc5331)": "Isabella Tedesco",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Design and Technology",
     "What is your minor(s)?\n(Leave blank if none)": "Communication Design and Society, Technology, Management",
     "MajorFilter": "Business/Finance ||Arts/Media",
     "What are you doing professionally this summer?\n(e.g., Business Analyst at Capital One)": "TA for Meta Summer Academy at Meta",
-    "CareerFilter": "Engineering / Tech || Education / Teaching",
+    "CareerFilter": "Engineering / Tech",
     "How last summer": "I attended MIT reality hack back in January 2025 and I was added to a discord channel related to intercollegiate XR groups and I saw someone posted about a position at Meta doing VR/Unity in the Bay Area (my hometown) and decided to apply! I had to go through 3 rounds of interviews (1 was a demo where I made a video presenting a concept in Unity and an accompanying slide deck, 2 + 3 were interviews with the hiring manager and my program director)",
     "Career Type Fresh summer ": "Engineering / Tech",
     "What did you do professionally last summer (going into sophomore year)?\n(e.g., Research Assistant at Columbia SIPA)": "Dream Machine VR exhibition intern at Lincoln Center",
@@ -164,7 +155,6 @@
   },
   {
     "Timestamp": 45874.94693446759,
-    "What is your UNI?\n(e.g., arc5331)": "tkh2118",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Computer Science",
@@ -183,8 +173,7 @@
   },
   {
     "Timestamp": 45874.94874368055,
-    "What is your UNI?\n(e.g., arc5331)": "bp2715",
-    "Grad Year": 2027,
+    "Grad Year": 4,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Applied Physics",
     "What is your minor(s)?\n(Leave blank if none)": "Applied Math, Computer Science",
@@ -202,7 +191,6 @@
   },
   {
     "Timestamp": 45874.95343525463,
-    "What is your UNI?\n(e.g., arc5331)": "chl2163",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Neuroscience & Behavior",
@@ -219,7 +207,6 @@
   },
   {
     "Timestamp": 45875.05838206019,
-    "What is your UNI?\n(e.g., arc5331)": "jym2117",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Computer Science",
@@ -236,7 +223,6 @@
   },
   {
     "Timestamp": 45875.07361385417,
-    "What is your UNI?\n(e.g., arc5331)": "ym3013",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Computer Science",
@@ -255,7 +241,6 @@
   },
   {
     "Timestamp": 45875.19738199074,
-    "What is your UNI?\n(e.g., arc5331)": "amg2451",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Psychology",
@@ -273,7 +258,6 @@
   },
   {
     "Timestamp": 45875.214378993056,
-    "What is your UNI?\n(e.g., arc5331)": "Adi Lankipalle",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Finance, International Studies",
@@ -291,7 +275,6 @@
   },
   {
     "Timestamp": 45875.375680173616,
-    "What is your UNI?\n(e.g., arc5331)": "Kda2123@columbia.edu",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Psychology ",
@@ -308,7 +291,6 @@
   },
   {
     "Timestamp": 45875.380315601855,
-    "What is your UNI?\n(e.g., arc5331)": "kcz2107",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Economics, Mathematics",
@@ -326,7 +308,6 @@
   },
   {
     "Timestamp": 45875.41529122685,
-    "What is your UNI?\n(e.g., arc5331)": "aed2181",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Biology",
@@ -343,7 +324,6 @@
   },
   {
     "Timestamp": 45875.45131783564,
-    "What is your UNI?\n(e.g., arc5331)": "Susan Lin",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Biology",
@@ -361,7 +341,6 @@
   },
   {
     "Timestamp": 45875.547889594905,
-    "What is your UNI?\n(e.g., arc5331)": "Ewv2106",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Music",
@@ -379,7 +358,6 @@
   },
   {
     "Timestamp": 45875.956126550926,
-    "What is your UNI?\n(e.g., arc5331)": "mag2392",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Financial Economics",
@@ -397,7 +375,6 @@
   },
   {
     "Timestamp": 45875.96158508102,
-    "What is your UNI?\n(e.g., arc5331)": "hx2379",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Financial Economics",
@@ -415,13 +392,12 @@
   },
   {
     "Timestamp": 45876.03993575231,
-    "What is your UNI?\n(e.g., arc5331)": "mte2116",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Financial Economics, Computer Science",
     "MajorFilter": "Business/Finance || Engineering/Math",
     "What are you doing professionally this summer?\n(e.g., Business Analyst at Capital One)": "Investment Banking Summer Analyst at PEI Global Partners",
-    "CareerFilter": "Business / Finance",
+    "CareerFilter": "Business / Finance || Media / Arts / Museums",
     "How last summer": "Applied and coffee chatted to get referral. Had 2 interviews, one technical one behavior",
     "Career Type Fresh summer ": "Business / Finance || Engineering / Tech",
     "What did you do professionally last summer (going into sophomore year)?\n(e.g., Research Assistant at Columbia SIPA)": "Management Intern at Power Assets Holdings Limited",
@@ -431,7 +407,6 @@
   },
   {
     "Timestamp": 45876.32930166667,
-    "What is your UNI?\n(e.g., arc5331)": "Ivana Hughes",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "marketing analytics ",
@@ -448,7 +423,6 @@
   },
   {
     "Timestamp": 45876.40922349537,
-    "What is your UNI?\n(e.g., arc5331)": "cjn2135",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Mechanical Engineering ",
@@ -465,7 +439,6 @@
   },
   {
     "Timestamp": 45876.41435011574,
-    "What is your UNI?\n(e.g., arc5331)": "dab2266",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Electrical Engineering, Computer Science ",
@@ -483,7 +456,6 @@
   },
   {
     "Timestamp": 45877.05893263889,
-    "What is your UNI?\n(e.g., arc5331)": "bdy2103",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "CS",
@@ -502,7 +474,6 @@
   },
   {
     "Timestamp": 45877.47475475694,
-    "What is your UNI?\n(e.g., arc5331)": "Sb4898",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Computer science",
@@ -520,13 +491,12 @@
   },
   {
     "Timestamp": 45877.7837172338,
-    "What is your UNI?\n(e.g., arc5331)": "sae2161",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Computational Neuroscience, Computer Science",
     "MajorFilter": "Science/Health Science || Engineering/Math",
     "What are you doing professionally this summer?\n(e.g., Business Analyst at Capital One)": "Research Associate at Icahn School of Medicine and QA for CVS Health (the larger corp not the retail store)",
-    "CareerFilter": "Academia / Graduate School || Healthcare / Life Sciences ",
+    "CareerFilter": "Academia / Graduate School || Healthcare / Life Sciences || Education / Teaching",
     "How last summer": "At the beginning of my freshman year, I cold emailed a ton of researchers sharing similar interests asking to join their labs. For the most part I’d been ghosted, but around February I got  in contact with my current PI who took on a recently graduating Barnard student. I interviewed with her and a post-doc that would be serving as my supervisor and I ended up joining their lab that June. I’m also heavily involved in any mentorship or networking programs I can find and many big companies (Microsoft, AWS, etc.) offer programs geared towards underclassmen to introduce them to their culture that often end up in direct consideration roles. ",
     "Career Type Fresh summer ": "Academia / Graduate School || Education / Teaching",
     "What did you do professionally last summer (going into sophomore year)?\n(e.g., Research Assistant at Columbia SIPA)": "Research Intern at Columbia Zuckerman Institute; Research Intern at Icahn School of Medicine; some dev with Google & NBC",
@@ -538,7 +508,6 @@
   },
   {
     "Timestamp": 45884.12517368056,
-    "What is your UNI?\n(e.g., arc5331)": "rr3578",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Neuroscience and Behavior",
@@ -556,7 +525,6 @@
   },
   {
     "Timestamp": 45885.69384196759,
-    "What is your UNI?\n(e.g., arc5331)": "chs2164",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Computer Science",
@@ -574,7 +542,6 @@
   },
   {
     "Timestamp": 45888.76318060185,
-    "What is your UNI?\n(e.g., arc5331)": "kd2945",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Applied mathematics",
@@ -590,7 +557,6 @@
   },
   {
     "Timestamp": 45886.70081039352,
-    "What is your UNI?\n(e.g., arc5331)": "tg2891",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Physics",
@@ -607,7 +573,6 @@
   },
   {
     "Timestamp": 45886.70081039352,
-    "What is your UNI?\n(e.g., arc5331)": "mac2551",
     "Grad Year": 2027,
     "Class": "Junior",
     "What is your major(s)?\n(Separate with commas if more than one)": "Economics-Statistics",
