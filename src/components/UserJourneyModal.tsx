@@ -1,5 +1,7 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { X, Link } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface UserJourneyModalProps {
   isOpen: boolean;
@@ -12,7 +14,16 @@ export const UserJourneyModal = ({
   onClose,
   journey,
 }: UserJourneyModalProps) => {
+  const { toast } = useToast();
+  
   if (!journey) return null;
+
+  const handleCopyLink = () => {
+    toast({
+      description: "Link copied",
+      duration: 1000,
+    });
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -25,12 +36,25 @@ export const UserJourneyModal = ({
         </button>
 
         <div className="space-y-4 mt-2">
-          <h2 className="text-2xl font-bold">
-            {journey.anonymous ? "Anonymous" : journey.name}
-          </h2>
-          <p className="text-muted-foreground">
-            Class of {journey.graduationYear || "N/A"}
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold">
+                {journey.anonymous ? "Anonymous" : journey.name}
+              </h2>
+              <p className="text-muted-foreground">
+                Class of {journey.graduationYear || "N/A"}
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCopyLink}
+              className="flex items-center gap-2"
+            >
+              <Link className="h-4 w-4" />
+              Copy Link
+            </Button>
+          </div>
 
           {journey.summers?.length > 0 && (
             <div>

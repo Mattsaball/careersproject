@@ -5,8 +5,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SophJourney } from "@/types/sophJourney";
+import { Link } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface SophJourneyModalProps {
   journey: SophJourney | null;
@@ -15,15 +18,35 @@ interface SophJourneyModalProps {
 }
 
 export const SophJourneyModal = ({ journey, isOpen, onClose }: SophJourneyModalProps) => {
+  const { toast } = useToast();
+  
   if (!journey) return null;
+
+  const handleCopyLink = () => {
+    toast({
+      description: "Link copied",
+      duration: 1000,
+    });
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-primary">
-            {journey.sophSummerJob}
-          </DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="text-xl font-bold text-primary">
+              {journey.sophSummerJob}
+            </DialogTitle>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCopyLink}
+              className="flex items-center gap-2"
+            >
+              <Link className="h-4 w-4" />
+              Copy Link
+            </Button>
+          </div>
         </DialogHeader>
         <ScrollArea className="h-[70vh] pr-4">
           <div className="space-y-6">
