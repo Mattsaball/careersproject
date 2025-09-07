@@ -1,9 +1,17 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import path from "path";
 
-// Config for custom domain at root: https://paretojourneys.com
 export default defineConfig({
+  server: {
+    port: 8080,
+  },
   plugins: [react()],
-  base: "/",   // IMPORTANT: root of a custom domain
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  base: "/",
 });
 
