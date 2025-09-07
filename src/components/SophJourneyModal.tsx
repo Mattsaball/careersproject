@@ -26,7 +26,7 @@ export const SophJourneyModal = ({ journey, isOpen, onClose, onShare }: SophJour
         <DialogHeader>
           <div className="flex items-center gap-6">
             <DialogTitle className="text-2xl">
-              Sophomore Summer Journey
+              {journey.sophSummerJob || "Sophomore Summer Journey"}
             </DialogTitle>
             <Button
               variant="outline"
