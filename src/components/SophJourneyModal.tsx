@@ -33,18 +33,19 @@ export const SophJourneyModal = ({ journey, isOpen, onClose }: SophJourneyModalP
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl font-bold text-primary">
+          <div className="flex items-start justify-between gap-4">
+            <DialogTitle className="text-xl font-bold text-primary flex-1">
               {journey.sophSummerJob}
             </DialogTitle>
             <Button
               variant="outline"
               size="sm"
               onClick={handleCopyLink}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 shrink-0"
+              title="Share this journey with others - click to copy link"
             >
               <Link className="h-4 w-4" />
-              Copy Link
+              Share Journey
             </Button>
           </div>
         </DialogHeader>

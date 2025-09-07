@@ -36,8 +36,8 @@ export const UserJourneyModal = ({
         </button>
 
         <div className="space-y-4 mt-2">
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1">
               <h2 className="text-2xl font-bold">
                 {journey.anonymous ? "Anonymous" : journey.name}
               </h2>
@@ -49,10 +49,11 @@ export const UserJourneyModal = ({
               variant="outline"
               size="sm"
               onClick={handleCopyLink}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 shrink-0"
+              title="Share this journey with others - click to copy link"
             >
               <Link className="h-4 w-4" />
-              Copy Link
+              Share Journey
             </Button>
           </div>
 
