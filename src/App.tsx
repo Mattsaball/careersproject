@@ -22,6 +22,7 @@ export default function App() {
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/journeys/:journeyId/cards/:cardId" element={<Index />} />
             <Route
               path="/contribute"
               element={

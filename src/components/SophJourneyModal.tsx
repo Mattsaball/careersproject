@@ -4,44 +4,34 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { SophJourney } from "@/types/sophJourney";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 interface SophJourneyModalProps {
   journey: SophJourney | null;
   isOpen: boolean;
   onClose: () => void;
+  onShare: () => void;
 }
 
-export const SophJourneyModal = ({ journey, isOpen, onClose }: SophJourneyModalProps) => {
-  const { toast } = useToast();
-  
+export const SophJourneyModal = ({ journey, isOpen, onClose, onShare }: SophJourneyModalProps) => {
   if (!journey) return null;
-
-  const handleCopyLink = () => {
-    toast({
-      description: "Link copied",
-      duration: 2000,
-      className: "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-fit px-4 py-2 rounded-md bg-background border shadow-lg",
-    });
-  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
         <DialogHeader>
           <div className="flex items-center gap-6">
-            <DialogTitle className="text-xl font-bold text-primary">
-              {journey.sophSummerJob}
+            <DialogTitle className="text-2xl">
+              Sophomore Summer Journey
             </DialogTitle>
             <Button
               variant="outline"
               size="sm"
-              onClick={handleCopyLink}
+              onClick={onShare}
               className="flex items-center gap-1.5 border-[#1DA1F2] text-[#1DA1F2] bg-transparent hover:bg-[#E6F3FF] hover:text-[#0A66C2] active:bg-[#1DA1F2] active:text-white transition-all duration-200 ease-in-out hover:scale-105"
               title="Share this journey with others"
             >
@@ -50,94 +40,75 @@ export const SophJourneyModal = ({ journey, isOpen, onClose }: SophJourneyModalP
             </Button>
           </div>
         </DialogHeader>
-        <ScrollArea className="h-[70vh] pr-4">
+        <ScrollArea className="max-h-[calc(90vh-120px)] pr-4 [&>[data-radix-scroll-area-scrollbar]]:opacity-100">
           <div className="space-y-6">
-            {/* Major & Academic Info */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg text-card-foreground">Academic Background</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-2">
-                  <span className="font-semibold">Major:</span> {journey.major}
-                </p>
-                {journey.minor && (
-                  <p className="text-sm text-muted-foreground mb-2">
-                    <span className="font-semibold">Minor:</span> {journey.minor}
-                  </p>
-                )}
-                <p className="text-sm text-muted-foreground">
-                  <span className="font-semibold">Major Type:</span> {journey.majorType}
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Sophomore Summer Experience */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg text-card-foreground">Sophomore Summer</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <p className="text-sm font-semibold text-card-foreground mb-2">What They Did:</p>
-                  <p className="text-sm text-muted-foreground mb-1">{journey.sophSummerJob}</p>
-                  <p className="text-xs text-muted-foreground">({journey.sophSummerCareerType})</p>
-                </div>
-                {journey.sophSummerHowGot && (
-                  <div>
-                    <p className="text-sm font-semibold text-card-foreground mb-2">How They Got This Experience:</p>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {journey.sophSummerHowGot}
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Freshman Summer Experience */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg text-card-foreground">Freshman Summer</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <p className="text-sm font-semibold text-card-foreground mb-2">What They Did:</p>
-                  <p className="text-sm text-muted-foreground mb-1">{journey.freshmanSummerJob}</p>
-                  <p className="text-xs text-muted-foreground">({journey.freshmanSummerCareerType})</p>
-                </div>
-                {journey.freshmanSummerHowGot && (
-                  <div>
-                    <p className="text-sm font-semibold text-card-foreground mb-2">How They Got This Experience:</p>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {journey.freshmanSummerHowGot}
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Advice */}
-            {journey.advice && (
+            {journey.major && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg text-card-foreground">Advice to Underclassmen</CardTitle>
+                  <CardTitle className="text-lg">Major</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                    {journey.major}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+            {journey.sophSummerJob && (
+               <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Sophomore Summer Experience</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                    {journey.sophSummerJob}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+            {journey.freshmanSummerJob && (
+               <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Freshman Summer Experience</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                    {journey.freshmanSummerJob}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+            {journey.networkingStrategies && (
+               <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Networking Strategies</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                    {journey.networkingStrategies}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+            {journey.advice && (
+               <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Advice</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
                     {journey.advice}
                   </p>
                 </CardContent>
               </Card>
             )}
-
-            {/* Hacks & Shortcuts */}
             {journey.hacks && (
-              <Card>
+               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg text-card-foreground">Hacks & Shortcuts</CardTitle>
+                  <CardTitle className="text-lg">Shortcuts & Hacks</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
                     {journey.hacks}
                   </p>
                 </CardContent>

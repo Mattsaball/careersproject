@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 import { CareerCard } from "@/components/CareerCard";
 import { CareerModal } from "@/components/CareerModal";
 import { UserJourneyModal } from "@/components/UserJourneyModal";
@@ -34,7 +36,7 @@ const staticJourneys: CareerJourney[] = alumniCards.map((alumniCard, index) => {
     shortcuts: alumniCard.hacks || "",
     additionalAdvice: alumniCard.additional_advice || "",
     networkingStrategies: alumniCard.networking_strats || "",
-    prevExperience: alumniCard.prev_experience || ""
+    prevExperience: alumniCard.prev_experience || "",
   };
   
   // Debug the first few journeys
@@ -102,6 +104,10 @@ const Index = () => {
   // Journey type toggle state
   const [showAlumni, setShowAlumni] = useState(false);
 
+  const { journeyId, cardId } = useParams<{ journeyId?: string; cardId?: string }>();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
   useEffect(() => {
     // Load static journeys immediately to avoid latency
     const staticNormalized = staticJourneys.map((journey) => ({
@@ -146,9 +152,33 @@ const Index = () => {
       });
   }, []);
 
+  // Effect to handle deep linking from URL
+  useEffect(() => {
+    // Ensure data is loaded before trying to open a card
+    if (cardId && (allJourneys.length > 0 || sophJourneys.length > 0)) {
+      if (journeyId === 'alumni') {
+        const journeyToOpen = allJourneys.find(j => j.id === cardId);
+        if (journeyToOpen) {
+          setShowAlumni(true); // Switch to the alumni tab
+          handleCardClick(cardId);
+        }
+      } else if (journeyId === 'student') {
+        const journeyToOpen = sophJourneys.find(j => j.id === cardId);
+        if (journeyToOpen) {
+          setShowAlumni(false); // Switch to the student tab
+          handleSophJourneyClick(cardId);
+        }
+      }
+    }
+  }, [cardId, journeyId, allJourneys, sophJourneys]);
+
+
   const handleCardClick = (id: string) => {
     const journey = allJourneys.find((j) => j.id === id);
     if (!journey) return;
+
+    // Update URL to the specific journey card
+    navigate(`/journeys/alumni/cards/${id}`);
 
     if (id.startsWith("static-")) {
       setSelectedStaticCareer(journey);
@@ -161,6 +191,8 @@ const Index = () => {
   const handleSophJourneyClick = (id: string) => {
     const journey = sophJourneys.find(j => j.id === id);
     if (journey) {
+      // Update URL to the specific journey card
+      navigate(`/journeys/student/cards/${id}`);
       setSelectedSophJourney(journey);
       setIsSophModalOpen(true);
     }
@@ -172,6 +204,19 @@ const Index = () => {
     setSelectedSophJourney(null);
     setIsModalOpen(false);
     setIsSophModalOpen(false);
+    // Navigate back to the base URL to clear the card-specific link
+    navigate('/');
+  };
+
+  const handleCopyLink = (type: 'alumni' | 'student', id: string) => {
+    const url = `${window.location.origin}/journeys/${type}/cards/${id}`;
+    navigator.clipboard.writeText(url).then(() => {
+      toast({
+        title: "Link Copied!",
+        description: "You can now share this journey.",
+        duration: 2000, // The toast will disappear after 2 seconds
+      });
+    });
   };
 
   // Major category mapping
@@ -543,6 +588,7 @@ const Index = () => {
           career={selectedStaticCareer}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
+          onShare={() => handleCopyLink('alumni', selectedStaticCareer.id)}
         />
       )}
 
@@ -551,6 +597,8 @@ const Index = () => {
           journey={selectedUserJourney}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
+          // Assuming UserJourneyModal can also have a share button
+          onShare={() => handleCopyLink('alumni', selectedUserJourney.id)}
         />
       )}
 
@@ -558,6 +606,7 @@ const Index = () => {
         journey={selectedSophJourney}
         isOpen={isSophModalOpen}
         onClose={handleCloseModal}
+        onShare={() => selectedSophJourney && handleCopyLink('student', selectedSophJourney.id)}
       />
     </div>
   );

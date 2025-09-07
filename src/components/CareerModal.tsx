@@ -6,26 +6,16 @@ import { CareerJourney } from "@/types/career";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 interface CareerModalProps {
   career: CareerJourney | null;
   isOpen: boolean;
   onClose: () => void;
+  onShare: () => void;
 }
 
-export const CareerModal = ({ career, isOpen, onClose }: CareerModalProps) => {
-  const { toast } = useToast();
-  
+export const CareerModal = ({ career, isOpen, onClose, onShare }: CareerModalProps) => {
   if (!career) return null;
-
-  const handleCopyLink = () => {
-    toast({
-      description: "Link copied",
-      duration: 2000,
-      className: "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-fit px-4 py-2 rounded-md bg-background border shadow-lg",
-    });
-  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -38,7 +28,7 @@ export const CareerModal = ({ career, isOpen, onClose }: CareerModalProps) => {
             <Button
               variant="outline"
               size="sm"
-              onClick={handleCopyLink}
+              onClick={onShare}
               className="flex items-center gap-1.5 border-[#1DA1F2] text-[#1DA1F2] bg-transparent hover:bg-[#E6F3FF] hover:text-[#0A66C2] active:bg-[#1DA1F2] active:text-white transition-all duration-200 ease-in-out hover:scale-105"
               title="Share this journey with others"
             >
