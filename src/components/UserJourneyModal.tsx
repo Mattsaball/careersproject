@@ -50,24 +50,12 @@ export const UserJourneyModal = ({
               variant="outline"
               size="sm"
               onClick={handleCopyLink}
-              className="flex items-center gap-2"
-              title="Copy link to this journey"
+              className="flex items-center gap-1.5 border-[#1DA1F2] text-[#1DA1F2] bg-transparent hover:bg-[#E6F3FF] hover:text-[#0A66C2] active:bg-[#1DA1F2] active:text-white transition-all duration-200 ease-in-out hover:scale-105"
+              title="Share this journey with others"
             >
-              <Link className="h-4 w-4" />
-              Copy Link
+              <Link className="h-[18px] w-[18px]" />
+              Share Journey
             </Button>
-            <div className="ml-16">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleCopyLink}
-                className="flex items-center gap-2"
-                title="Share this journey with others"
-              >
-                <Link className="h-4 w-4" />
-                Share Journey
-              </Button>
-            </div>
           </div>
 
           {journey.summers?.length > 0 && (
