@@ -22,7 +22,7 @@ export const UserJourneyModal = ({
     toast({
       description: "Link copied",
       duration: 2000,
-      className: "fixed top-4 left-1/2 transform -translate-x-1/2 z-50",
+      className: "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-fit px-4 py-2 rounded-md bg-background border shadow-lg",
     });
   };
 
