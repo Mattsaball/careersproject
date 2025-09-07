@@ -21,7 +21,7 @@ export const UserJourneyModal = ({
   const handleCopyLink = () => {
     toast({
       description: "Link copied",
-      duration: 1000,
+      duration: 2000,
       className: "fixed top-4 left-1/2 transform -translate-x-1/2 z-50",
     });
   };
@@ -37,8 +37,8 @@ export const UserJourneyModal = ({
         </button>
 
         <div className="space-y-4 mt-2">
-          <div className="flex items-start gap-4">
-            <div className="flex-1">
+          <div className="flex items-center gap-6">
+            <div>
               <h2 className="text-2xl font-bold">
                 {journey.anonymous ? "Anonymous" : journey.name}
               </h2>
@@ -46,13 +46,23 @@ export const UserJourneyModal = ({
                 Class of {journey.graduationYear || "N/A"}
               </p>
             </div>
-            <div style={{ marginLeft: '100px' }}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCopyLink}
+              className="flex items-center gap-2"
+              title="Copy link to this journey"
+            >
+              <Link className="h-4 w-4" />
+              Copy Link
+            </Button>
+            <div className="ml-16">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleCopyLink}
-                className="flex items-center gap-2 shrink-0"
-                title="Share this journey with others - click to copy link"
+                className="flex items-center gap-2"
+                title="Share this journey with others"
               >
                 <Link className="h-4 w-4" />
                 Share Journey
