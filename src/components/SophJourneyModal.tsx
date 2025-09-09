@@ -63,6 +63,14 @@ export const SophJourneyModal = ({ journey, isOpen, onClose, onShare }: SophJour
                   <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
                     {journey.sophSummerJob}
                   </p>
+                  {journey.sophSummerHowGot && (
+                    <div className="mt-4 pt-4 border-t border-border">
+                      <h4 className="font-medium text-card-foreground mb-2">How they got this opportunity:</h4>
+                      <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                        {journey.sophSummerHowGot}
+                      </p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             )}
@@ -75,6 +83,14 @@ export const SophJourneyModal = ({ journey, isOpen, onClose, onShare }: SophJour
                   <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
                     {journey.freshmanSummerJob}
                   </p>
+                  {journey.freshmanSummerHowGot && (
+                    <div className="mt-4 pt-4 border-t border-border">
+                      <h4 className="font-medium text-card-foreground mb-2">How they got this opportunity:</h4>
+                      <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                        {journey.freshmanSummerHowGot}
+                      </p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             )}
